@@ -1,0 +1,26 @@
+# 機密
+.env
+*.key
+secrets.toml
+.streamlit/secrets.toml
+
+# 進度紀錄（個人本地）
+.processed_urls.txt
+.failed_urls.txt
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
