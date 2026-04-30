@@ -284,10 +284,10 @@ st.markdown("""
     .block-container::before {
         content: "🪷";
         position: fixed;
-        font-size: 48px;
+        font-size: 44px;
         opacity: 0.07;
-        top: 22%;
-        left: 58%;
+        top: 18%;
+        left: 88%;
         transform: rotate(-20deg);
         pointer-events: none;
         z-index: 0;
@@ -296,10 +296,10 @@ st.markdown("""
     .block-container::after {
         content: "🪷";
         position: fixed;
-        font-size: 32px;
+        font-size: 30px;
         opacity: 0.06;
-        top: 60%;
-        left: 72%;
+        top: 72%;
+        left: 85%;
         transform: rotate(15deg);
         pointer-events: none;
         z-index: 0;
@@ -310,9 +310,9 @@ st.markdown("""
 # 額外花瓣（CSS 偽元素只能兩個，其餘用 HTML）
 st.markdown("""
 <div style="pointer-events:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; overflow:hidden;">
-  <span style="position:absolute; font-size:28px; opacity:0.055; top:40%; left:62%; transform:rotate(30deg);">🪷</span>
-  <span style="position:absolute; font-size:22px; opacity:0.05; top:75%; left:55%; transform:rotate(-10deg);">🪷</span>
-  <span style="position:absolute; font-size:38px; opacity:0.06; top:15%; left:80%; transform:rotate(5deg);">🪷</span>
+  <span style="position:absolute; font-size:28px; opacity:0.055; top:45%; left:90%; transform:rotate(30deg);">🪷</span>
+  <span style="position:absolute; font-size:20px; opacity:0.05; top:85%; left:82%; transform:rotate(-10deg);">🪷</span>
+  <span style="position:absolute; font-size:36px; opacity:0.06; top:55%; left: 87%; transform:rotate(5deg);">🪷</span>
 </div>
 """, unsafe_allow_html=True)
 
