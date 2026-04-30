@@ -179,9 +179,9 @@ st.markdown("""
 
     [data-testid="stSidebar"] p,
     [data-testid="stSidebar"] small {
-        font-size: 13px;
-        line-height: 1.95;
-        color: #5a5a5a;
+        font-size: 15px;
+        line-height: 2.0;
+        color: #4a4a4a;
     }
 
     [data-testid="stSidebar"] h4 {
@@ -282,8 +282,8 @@ st.markdown("""
 
     /* caption 文字 */
     .stCaptionContainer p {
-        color: #9aab9a;
-        font-size: 12px;
+        color: #7a8a7a;
+        font-size: 14px;
     }
 </style>
 """, unsafe_allow_html=True)
