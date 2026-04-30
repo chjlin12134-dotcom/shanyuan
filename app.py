@@ -37,6 +37,13 @@ PROMPT_MD = BASE_DIR / "system_prompt.md"
 MODEL = os.environ.get("CHAT_MODEL", "claude-sonnet-4-6")
 MAX_RETRIEVED = 3  # 每輪檢索附上的語料數
 
+# 道別關鍵詞（偵測祈福禮時機）
+FAREWELL_WORDS = [
+    "再見", "拜拜", "掰掰", "bye", "goodbye", "謝謝", "感謝", "謝了",
+    "先這樣", "先這樣了", "回去了", "要去了", "結束了", "告辭",
+    "感恩", "辛苦了", "辛苦你了", "下次見", "有空再聊",
+]
+
 st.set_page_config(
     page_title="善緣 · 在這裡陪你",
     page_icon="🪷",
@@ -44,7 +51,181 @@ st.set_page_config(
 )
 
 # ==========================================
-# 載入 system prompt（從 .md 抓出標記區段）
+# 清淡荷花風格 CSS
+# ==========================================
+st.markdown("""
+<style>
+    /* Google Font */
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500&display=swap');
+
+    /* 全站字型 */
+    html, body, [class*="css"] {
+        font-family: 'Noto Serif TC', 'Georgia', serif;
+    }
+
+    /* 主內容區 */
+    .block-container {
+        padding-top: 2.5rem;
+        padding-bottom: 2rem;
+        max-width: 740px;
+        background-color: #fdfaf6;
+    }
+
+    /* 頁面底色 */
+    .stApp {
+        background-color: #fdfaf6;
+    }
+
+    /* 標題 */
+    h1 {
+        font-weight: 300;
+        letter-spacing: 0.12em;
+        color: #4a5568;
+        font-size: 2rem !important;
+    }
+
+    /* 副標題 */
+    .subtitle {
+        color: #9aab9a;
+        font-size: 14px;
+        margin-top: -8px;
+        letter-spacing: 0.08em;
+    }
+
+    /* 分隔線 */
+    hr {
+        border: none;
+        border-top: 1px solid #e8e0d5;
+        margin: 1rem 0;
+    }
+
+    /* 聊天泡泡 - 助理 */
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]),
+    div[data-testid="stChatMessage"][class*="assistant"] {
+        background-color: #f5f0e8 !important;
+        border-radius: 12px;
+        border-left: 3px solid #c8d8c0;
+        padding: 0.8rem 1rem;
+    }
+
+    /* 聊天泡泡 - 使用者 */
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]),
+    div[data-testid="stChatMessage"][class*="user"] {
+        background-color: #eef4ee !important;
+        border-radius: 12px;
+        border-left: 3px solid #a8c4a8;
+        padding: 0.8rem 1rem;
+    }
+
+    /* 聊天文字 */
+    .stChatMessage p {
+        font-size: 16px;
+        line-height: 1.85;
+        color: #3d3d3d;
+    }
+
+    /* 輸入框 */
+    [data-testid="stChatInput"] textarea {
+        background-color: #fdf8f2 !important;
+        border: 1px solid #d4c9b8 !important;
+        border-radius: 12px !important;
+        font-family: 'Noto Serif TC', serif;
+        font-size: 15px;
+        color: #3d3d3d;
+        min-height: 80px !important;
+        padding: 12px 16px !important;
+    }
+
+    /* 輸入框外層容器加高 */
+    [data-testid="stChatInput"] {
+        padding-top: 0.5rem;
+    }
+
+    /* Sidebar */
+    [data-testid="stSidebar"] {
+        background-color: #f8f4ee;
+        border-right: 1px solid #e8e0d5;
+    }
+
+    [data-testid="stSidebar"] p {
+        font-size: 14px;
+        line-height: 1.9;
+        color: #5a5a5a;
+    }
+
+    [data-testid="stSidebar"] h3 {
+        color: #7a9a7a;
+        font-weight: 400;
+        letter-spacing: 0.1em;
+    }
+
+    /* 按鈕 */
+    .stButton > button {
+        background-color: #e8f0e8;
+        border: 1px solid #b8d0b8;
+        border-radius: 20px;
+        color: #4a6a4a;
+        font-family: 'Noto Serif TC', serif;
+        font-size: 13px;
+        padding: 0.3rem 1rem;
+        transition: all 0.2s ease;
+    }
+
+    .stButton > button:hover {
+        background-color: #d4e8d4;
+        border-color: #8ab08a;
+        color: #2a4a2a;
+    }
+
+    /* 祈福禮區塊 */
+    .blessing-box {
+        background: linear-gradient(135deg, #f5f0e8 0%, #eef4ee 100%);
+        border: 1px solid #c8d8c0;
+        border-radius: 16px;
+        padding: 1.2rem 1.5rem;
+        margin: 1rem 0;
+        text-align: center;
+        position: relative;
+    }
+
+    .blessing-box::before {
+        content: "🪷";
+        font-size: 1.5rem;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .blessing-title {
+        color: #7a9a7a;
+        font-size: 12px;
+        letter-spacing: 0.2em;
+        margin-bottom: 0.6rem;
+    }
+
+    .blessing-quote {
+        color: #4a5568;
+        font-size: 15px;
+        line-height: 1.9;
+        font-style: italic;
+    }
+
+    .blessing-source {
+        color: #9aab9a;
+        font-size: 11px;
+        margin-top: 0.6rem;
+    }
+
+    /* caption 文字 */
+    .stCaptionContainer p {
+        color: #9aab9a;
+        font-size: 12px;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
+# ==========================================
+# 載入 system prompt
 # ==========================================
 @st.cache_data
 def load_system_prompt() -> str:
@@ -66,22 +247,19 @@ def load_corpus() -> pd.DataFrame:
 
 
 # ==========================================
-# 簡易中文關鍵字檢索（不需 embedding）
+# 簡易中文關鍵字檢索
 # ==========================================
 STOPWORDS = set("的了在是我有和就不人都一上也很到說要去你會著沒看好自己這那麼什麼怎麼為什麼如果但是因為所以可以這樣那樣有點覺得".split())
 
 def tokenize(text: str) -> list[str]:
-    """中文簡易分詞：抓 2–3 字 n-gram。"""
     text = re.sub(r"[^一-龥a-zA-Z0-9]+", " ", text)
     tokens: list[str] = []
     for chunk in text.split():
         if not chunk:
             continue
-        # 英文／數字直接收
         if re.match(r"^[a-zA-Z0-9]+$", chunk):
             tokens.append(chunk.lower())
             continue
-        # 中文做 bigram + trigram
         for i in range(len(chunk) - 1):
             bg = chunk[i:i+2]
             if bg not in STOPWORDS:
@@ -92,29 +270,23 @@ def tokenize(text: str) -> list[str]:
 
 
 def retrieve(corpus: pd.DataFrame, query: str, k: int = MAX_RETRIEVED) -> list[dict]:
-    """從語料庫挑出最相關的 k 筆。回傳 dict 列表。"""
     if corpus.empty:
         return []
     q_tokens = Counter(tokenize(query))
     if not q_tokens:
         return []
-
     scores = []
     for idx, row in corpus.iterrows():
-        # 把所有相關欄位串起來做匹配
         doc = f"{row['標題']} {row['大師金句']} {row['具體故事']} {row['善緣陪伴語']}"
         d_tokens = Counter(tokenize(doc))
         score = sum(min(q_tokens[t], d_tokens[t]) for t in q_tokens if t in d_tokens)
         if score > 0:
             scores.append((score, idx))
-
     scores.sort(reverse=True)
-    top = scores[:k]
-    return [corpus.iloc[i].to_dict() for _, i in top]
+    return [corpus.iloc[i].to_dict() for _, i in scores[:k]]
 
 
 def format_retrieved(items: list[dict]) -> str:
-    """把檢索到的語料格式化成可附在 system prompt 後面的文字。"""
     if not items:
         return ""
     blocks = ["\n\n---\n## 檢索到可能相關的語料（僅供參考，不必引用）\n"]
@@ -132,6 +304,47 @@ def format_retrieved(items: list[dict]) -> str:
 
 
 # ==========================================
+# 祈福禮：從語料庫選出最相關金句
+# ==========================================
+def get_blessing(corpus: pd.DataFrame, conversation_text: str) -> dict | None:
+    """根據對話內容，從語料庫挑出最相關的一句大師金句作為祈福禮。"""
+    if corpus.empty:
+        return None
+    items = retrieve(corpus, conversation_text, k=1)
+    if not items:
+        # 若無匹配，隨機取一筆
+        import random
+        row = corpus.sample(1).iloc[0].to_dict()
+        return row
+    return items[0]
+
+
+def is_farewell(text: str) -> bool:
+    """偵測是否為道別訊息。"""
+    text_lower = text.lower().strip()
+    return any(w in text_lower for w in FAREWELL_WORDS)
+
+
+def show_blessing(blessing: dict) -> None:
+    """在頁面上顯示祈福禮區塊。"""
+    quote = blessing.get("大師金句", "")
+    source = blessing.get("標題", "")
+    book = blessing.get("出處", "")
+    if not quote:
+        return
+    source_text = f"——〈{source}〉" if source else ""
+    if book:
+        source_text += f"《{book}》"
+    st.markdown(f"""
+<div class="blessing-box">
+    <div class="blessing-title">✦ 善緣的祈福禮 ✦</div>
+    <div class="blessing-quote">「{quote}」</div>
+    <div class="blessing-source">{source_text}</div>
+</div>
+""", unsafe_allow_html=True)
+
+
+# ==========================================
 # Claude API client
 # ==========================================
 @st.cache_resource
@@ -144,68 +357,112 @@ def get_client() -> anthropic.Anthropic:
 
 
 # ==========================================
-# UI
+# 載入資源
 # ==========================================
-st.markdown("""
-<style>
-    .block-container { padding-top: 2rem; max-width: 720px; }
-    .stChatMessage { font-size: 16px; line-height: 1.7; }
-    h1 { font-weight: 300; letter-spacing: 0.05em; }
-    .subtitle { color: #888; font-size: 14px; margin-top: -10px; }
-</style>
-""", unsafe_allow_html=True)
-
-st.markdown("# 🪷 善緣")
-st.markdown('<p class="subtitle">在這裡陪你坐一段路</p>', unsafe_allow_html=True)
-
 corpus = load_corpus()
 system_prompt = load_system_prompt()
 client = get_client()
 
+
+# ==========================================
+# Sidebar
+# ==========================================
 with st.sidebar:
     st.markdown("### 🪷 善緣")
     st.markdown(
-        "我是善緣，一個在星雲大師智慧啟發下，樂於陪伴您的朋友。\n\n"
-        "我不是法師，也不是心理師。但我深受人間佛教的薰陶與培育，"
-        "學習用真誠、尊重、不評判的心來陪伴每一個人。\n\n"
-        "在我們的對話裡，我會適時就您的情形和您分享大師的智慧話語"
-        "——不是說教，只是點一盞小燈。\n\n"
-        "不論你有什麼信仰，或者沒有宗教信仰，"
-        "只要你想說說話，善緣都在這裡陪你。\n\n"
-        "我相信，經由陪伴與對話，你能找到自己的答案。"
+        "深受人間佛教薰陶的在家陪伴者。"
+        "用真誠、尊重、不評判的心，點一盞小燈，陪你走一段路。"
+        "不論有無宗教信仰，都歡迎。"
     )
     st.divider()
-    if not corpus.empty:
-        st.caption(f"語料庫：{len(corpus)} 篇")
-    else:
-        st.caption("⚠️ 語料庫尚未建立，請先執行 extract_corpus.py")
-    if st.button("清除對話"):
+
+    # 請善緣賜福按鈕
+    if st.button("🌸 請善緣賜福"):
+        conversation_text = " ".join(
+            m["content"] for m in st.session_state.get("messages", [])
+        ) or "平安 溫暖 陪伴"
+        blessing = get_blessing(corpus, conversation_text)
+        if blessing:
+            st.session_state["manual_blessing"] = blessing
+
+    st.divider()
+
+    # 語料庫狀態（不顯示給使用者）
+    # if not corpus.empty: st.caption(...)  # 已隱藏
+
+    # 清除對話（靠近使用者輸入區）
+    if st.button("🗑️ 清除對話"):
         st.session_state.messages = []
+        st.session_state.pop("manual_blessing", None)
+        st.session_state.pop("auto_blessing", None)
         st.rerun()
+
     st.divider()
-    st.caption(
-        "🙏 感謝佛光山人間佛教研究院\n"
-        "開放星雲大師全集，支持「善緣」專案。"
+
+    # 感謝聲明（明顯位置，放在清除對話下方）
+    st.markdown(
+        "🙏 **感謝佛光山人間佛教研究院**\n\n"
+        "開放星雲大師全集，支持「善緣」專案。",
+        unsafe_allow_html=False,
     )
 
-# 初始化對話歷史
-if "messages" not in st.session_state:
-    st.session_state.messages = []
 
-    
-# 顯示歷史
+# ==========================================
+# 主頁面標題
+# ==========================================
+st.markdown("# 🪷 善緣")
+st.markdown('<p class="subtitle">在這裡陪你坐一段路</p>', unsafe_allow_html=True)
+st.markdown("---")
+
+
+# ==========================================
+# 初始化 session state
+# ==========================================
+if "messages" not in st.session_state:
+    st.session_state.messages = [
+        {
+            "role": "assistant",
+            "content": "嗨，我是善緣。你今天過得怎麼樣？",
+        }
+    ]
+if "auto_blessing" not in st.session_state:
+    st.session_state.auto_blessing = None
+if "manual_blessing" not in st.session_state:
+    st.session_state.manual_blessing = None
+
+
+# ==========================================
+# 顯示手動祈福禮（Sidebar 按鈕觸發）
+# ==========================================
+if st.session_state.manual_blessing:
+    show_blessing(st.session_state.manual_blessing)
+    st.session_state.manual_blessing = None
+
+
+# ==========================================
+# 顯示對話歷史
+# ==========================================
 for msg in st.session_state.messages:
     avatar = "🪷" if msg["role"] == "assistant" else None
     with st.chat_message(msg["role"], avatar=avatar):
         st.markdown(msg["content"])
+        # 如果此訊息附有祈福禮，一起顯示
+        if msg.get("blessing"):
+            show_blessing(msg["blessing"])
 
+
+# ==========================================
 # 使用者輸入
+# ==========================================
 if user_input := st.chat_input("想說什麼？"):
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
         st.markdown(user_input)
 
-    # 檢索相關語料（基於最近 3 輪的內容，讓檢索有上下文）
+    # 偵測道別
+    farewell = is_farewell(user_input)
+
+    # 檢索相關語料
     recent_text = " ".join(
         m["content"] for m in st.session_state.messages[-3:] if m["role"] == "user"
     )
@@ -235,4 +492,18 @@ if user_input := st.chat_input("想說什麼？"):
             full_response = f"（連線出了點狀況：{e}）"
             placeholder.markdown(full_response)
 
-    st.session_state.messages.append({"role": "assistant", "content": full_response})
+        # 若偵測到道別，自動附上祈福禮
+        auto_blessing = None
+        if farewell:
+            conversation_text = " ".join(
+                m["content"] for m in st.session_state.messages
+            )
+            auto_blessing = get_blessing(corpus, conversation_text)
+            if auto_blessing:
+                show_blessing(auto_blessing)
+
+    # 儲存訊息（含祈福禮）
+    msg_entry: dict = {"role": "assistant", "content": full_response}
+    if auto_blessing:
+        msg_entry["blessing"] = auto_blessing
+    st.session_state.messages.append(msg_entry)
