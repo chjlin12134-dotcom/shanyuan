@@ -511,7 +511,26 @@ for msg in st.session_state.messages:
         if msg.get("blessing"):
             show_blessing(msg["blessing"])
 
+# 錨點：語音 rerun 後捲到這裡
+st.markdown('<div id="chat-bottom"></div>', unsafe_allow_html=True)
 
+# 若語音剛辨識完，自動捲到最新訊息
+if st.session_state.get("scroll_to_bottom"):
+    st.session_state["scroll_to_bottom"] = False
+    st.components.v1.html("""
+<script>
+(function() {
+  function scrollToBottom() {
+    var el = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
+    if (el) { el.scrollTop = el.scrollHeight; return; }
+    var body = window.parent.document.body;
+    if (body) body.scrollTop = body.scrollHeight;
+  }
+  setTimeout(scrollToBottom, 100);
+  setTimeout(scrollToBottom, 400);
+})();
+</script>
+""", height=0)
 
 # 取出語音輸入（若有）
 voice_text = st.session_state.pop("voice_input", None)
@@ -564,6 +583,7 @@ with col_voice:
                         if transcript:
                             st.session_state["voice_input"] = transcript
                             st.session_state["show_audio_input"] = False
+                            st.session_state["scroll_to_bottom"] = True
                             st.rerun()
                         elif "error" in result:
                             err = result["error"].get("code", "")
