@@ -20,7 +20,6 @@ from pathlib import Path
 import anthropic
 import pandas as pd
 import streamlit as st
-import streamlit.components.v1 as components
 
 # 自動載入同資料夾的 .env（如果存在）
 try:
@@ -515,121 +514,42 @@ for msg in st.session_state.messages:
 
 
 # ==========================================
-# 語音輸入元件（固定在右下角）
+# 語音輸入（Groq Whisper）
 # ==========================================
-components.html("""
-<script>
-let recognition = null;
-let listening = false;
+with st.expander("🎙️ 語音輸入", expanded=False):
+    audio = st.audio_input("按下錄音，說完再按停止")
+    if audio is not None:
+        groq_key = os.environ.get("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY", "")
+        if not groq_key:
+            st.warning("找不到 GROQ_API_KEY")
+        else:
+            with st.spinner("辨識中…"):
+                try:
+                    import httpx
+                    response = httpx.post(
+                        "https://api.groq.com/openai/v1/audio/transcriptions",
+                        headers={"Authorization": f"Bearer {groq_key}"},
+                        files={"file": ("audio.wav", audio.getvalue(), "audio/wav")},
+                        data={"model": "whisper-large-v3-turbo", "language": "zh"},
+                        timeout=30,
+                    )
+                    result = response.json()
+                    transcript = result.get("text", "")
+                    if transcript:
+                        st.success(f"✓ {transcript}")
+                        st.session_state["voice_input"] = transcript
+                        st.rerun()
+                except Exception as e:
+                    st.error(f"語音辨識失敗：{e}")
 
-// 把按鈕注入到父頁面，固定在右下角
-const parentDoc = window.parent.document;
-
-// 避免重複注入
-if (!parentDoc.getElementById('shanyuan-mic-btn')) {
-  const btn = parentDoc.createElement('button');
-  btn.id = 'shanyuan-mic-btn';
-  btn.title = '語音輸入';
-  btn.innerHTML = '🎙️';
-  btn.style.cssText = `
-    position: fixed;
-    bottom: 220px;
-    right: 24px;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    border: 1px solid rgba(168,196,168,0.6);
-    background: linear-gradient(135deg,#eef4ee,#e4ede4);
-    font-size: 22px;
-    cursor: pointer;
-    box-shadow: 0 2px 10px rgba(140,180,140,0.2);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-  `;
-
-  const status = parentDoc.createElement('div');
-  status.id = 'shanyuan-mic-status';
-  status.style.cssText = `
-    position: fixed;
-    bottom: 200px;
-    right: 74px;
-    font-size: 12px;
-    color: #9aab9a;
-    font-family: 'Noto Serif TC', serif;
-    z-index: 9999;
-    background: rgba(253,248,240,0.9);
-    padding: 2px 8px;
-    border-radius: 8px;
-    display: none;
-  `;
-
-  parentDoc.body.appendChild(btn);
-  parentDoc.body.appendChild(status);
-
-  btn.addEventListener('click', () => {
-    if (!('webkitSpeechRecognition' in window.parent) && !('SpeechRecognition' in window.parent)) {
-      status.innerText = '請用 Chrome 瀏覽器';
-      status.style.display = 'block';
-      return;
-    }
-    if (listening) {
-      recognition.stop();
-      return;
-    }
-    const SR = window.parent.SpeechRecognition || window.parent.webkitSpeechRecognition;
-    recognition = new SR();
-    recognition.lang = 'zh-TW';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-
-    recognition.onstart = () => {
-      listening = true;
-      btn.innerHTML = '⏹️';
-      btn.style.background = 'linear-gradient(135deg,#fde8e8,#f8d0d0)';
-      status.innerText = '聆聽中…';
-      status.style.display = 'block';
-    };
-
-    recognition.onresult = (e) => {
-      const text = e.results[0][0].transcript;
-      const textarea = parentDoc.querySelector('textarea[data-testid="stChatInputTextArea"]');
-      if (textarea) {
-        // 累加：在現有文字後面接上新辨識的文字
-        const existing = textarea.value;
-        const newText = existing ? existing + '，' + text : text;
-        const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
-        setter.call(textarea, newText);
-        textarea.dispatchEvent(new Event('input', { bubbles: true }));
-        textarea.focus();
-      }
-      status.innerText = '✓ 再按🎙️可繼續說';
-      setTimeout(() => { status.style.display = 'none'; }, 3000);
-    };
-
-    recognition.onerror = () => {
-      status.innerText = '辨識失敗，請再試';
-      setTimeout(() => { status.style.display = 'none'; }, 2000);
-    };
-
-    recognition.onend = () => {
-      listening = false;
-      btn.innerHTML = '🎙️';
-      btn.style.background = 'linear-gradient(135deg,#eef4ee,#e4ede4)';
-    };
-
-    recognition.start();
-  });
-}
-</script>
-""", height=0)
+# 取出語音輸入（若有）
+voice_text = st.session_state.pop("voice_input", None)
 
 # ==========================================
 # 使用者輸入
 # ==========================================
-if user_input := st.chat_input("想說什麼？"):
+user_input = voice_text or st.chat_input("想說什麼？")
+if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
         st.markdown(user_input)
