@@ -73,11 +73,11 @@ st.markdown("""
     .lotus-bg {
         position: fixed;
         top: 50%;
-        left: 50%;
-        transform: translate(-30%, -45%);
-        width: 650px;
-        height: 650px;
-        opacity: 0.07;
+        left: 60%;
+        transform: translate(-50%, -50%);
+        width: 820px;
+        height: 820px;
+        opacity: 0.13;
         pointer-events: none;
         z-index: 0;
     }
