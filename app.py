@@ -63,19 +63,29 @@ st.markdown("""
         font-family: 'Noto Serif TC', 'Georgia', serif;
     }
 
-    /* 頁面背景：蓮花水印襯底 */
+    /* 頁面背景 */
     .stApp {
         background-color: #fdf8f0 !important;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700' viewBox='0 0 700 700'%3E%3Cg transform='translate(350,380)' opacity='0.05'%3E%3C!-- 外層花瓣 8片 --%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23888888' transform='rotate(0)'/%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23888888' transform='rotate(45)'/%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23888888' transform='rotate(90)'/%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23888888' transform='rotate(135)'/%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23888888' transform='rotate(180)'/%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23888888' transform='rotate(225)'/%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23888888' transform='rotate(270)'/%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23888888' transform='rotate(315)'/%3E%3C!-- 中層花瓣 8片 --%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23999999' transform='rotate(22.5)'/%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23999999' transform='rotate(67.5)'/%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23999999' transform='rotate(112.5)'/%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23999999' transform='rotate(157.5)'/%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23999999' transform='rotate(202.5)'/%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23999999' transform='rotate(247.5)'/%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23999999' transform='rotate(292.5)'/%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23999999' transform='rotate(337.5)'/%3E%3C!-- 內層花瓣 6片 --%3E%3Cellipse cx='0' cy='-70' rx='25' ry='55' fill='%23aaaaaa' transform='rotate(0)'/%3E%3Cellipse cx='0' cy='-70' rx='25' ry='55' fill='%23aaaaaa' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='-70' rx='25' ry='55' fill='%23aaaaaa' transform='rotate(120)'/%3E%3Cellipse cx='0' cy='-70' rx='25' ry='55' fill='%23aaaaaa' transform='rotate(180)'/%3E%3Cellipse cx='0' cy='-70' rx='25' ry='55' fill='%23aaaaaa' transform='rotate(240)'/%3E%3Cellipse cx='0' cy='-70' rx='25' ry='55' fill='%23aaaaaa' transform='rotate(300)'/%3E%3C!-- 花心 --%3E%3Ccircle cx='0' cy='0' r='30' fill='%23bbbb88' opacity='0.5'/%3E%3Ccircle cx='0' cy='0' r='18' fill='%23cccc99' opacity='0.4'/%3E%3C!-- 蓮葉大 --%3E%3Cellipse cx='-240' cy='100' rx='140' ry='70' fill='%23789878' transform='rotate(-15,-240,100)'/%3E%3Cellipse cx='250' cy='110' rx='120' ry='60' fill='%23789878' transform='rotate(10,250,110)'/%3E%3Cellipse cx='-80' cy='160' rx='90' ry='45' fill='%23899989' transform='rotate(-5,-80,160)'/%3E%3Cellipse cx='100' cy='170' rx='80' ry='40' fill='%23899989' transform='rotate(8,100,170)'/%3E%3C!-- 蓮梗 --%3E%3Cline x1='0' y1='20' x2='-240' y2='100' stroke='%23789878' stroke-width='5'/%3E%3Cline x1='0' y1='20' x2='250' y2='110' stroke='%23789878' stroke-width='4'/%3E%3Cline x1='0' y1='20' x2='-80' y2='160' stroke='%23899989' stroke-width='3'/%3E%3Cline x1='0' y1='20' x2='100' y2='170' stroke='%23899989' stroke-width='3'/%3E%3C/g%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: center 60%;
-        background-size: 75%;
         min-height: 100vh;
     }
 
-    /* 覆蓋 Streamlit 預設白底 */
-    .stApp > div, [data-testid="stAppViewContainer"] {
-        background: transparent !important;
+    /* 蓮花水印：固定在頁面正中央，pointer-events none 不影響操作 */
+    .lotus-bg {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-30%, -45%);
+        width: 650px;
+        height: 650px;
+        opacity: 0.07;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* 確保內容在蓮花上層 */
+    .block-container, [data-testid="stSidebar"] {
+        position: relative;
+        z-index: 1;
     }
 
     [data-testid="stHeader"] {
@@ -430,6 +440,52 @@ def get_client() -> anthropic.Anthropic:
 corpus = load_corpus()
 system_prompt = load_system_prompt()
 client = get_client()
+
+# 蓮花水印（固定浮層，覆蓋整個視窗）
+st.markdown("""
+<svg class="lotus-bg" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(350,340)">
+    <!-- 外層花瓣 8片 -->
+    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(45)"/>
+    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(90)"/>
+    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(135)"/>
+    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(180)"/>
+    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(225)"/>
+    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(270)"/>
+    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(315)"/>
+    <!-- 中層花瓣 8片 -->
+    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(22.5)"/>
+    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(67.5)"/>
+    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(112.5)"/>
+    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(157.5)"/>
+    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(202.5)"/>
+    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(247.5)"/>
+    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(292.5)"/>
+    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(337.5)"/>
+    <!-- 內層花瓣 6片 -->
+    <ellipse cx="0" cy="-70" rx="25" ry="55" fill="#c0a0a0" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-70" rx="25" ry="55" fill="#c0a0a0" transform="rotate(60)"/>
+    <ellipse cx="0" cy="-70" rx="25" ry="55" fill="#c0a0a0" transform="rotate(120)"/>
+    <ellipse cx="0" cy="-70" rx="25" ry="55" fill="#c0a0a0" transform="rotate(180)"/>
+    <ellipse cx="0" cy="-70" rx="25" ry="55" fill="#c0a0a0" transform="rotate(240)"/>
+    <ellipse cx="0" cy="-70" rx="25" ry="55" fill="#c0a0a0" transform="rotate(300)"/>
+    <!-- 花心 -->
+    <circle cx="0" cy="0" r="28" fill="#c8b870"/>
+    <circle cx="0" cy="0" r="16" fill="#d4c880"/>
+    <!-- 蓮梗 -->
+    <line x1="0" y1="20" x2="-250" y2="130" stroke="#6a8a6a" stroke-width="5"/>
+    <line x1="0" y1="20" x2="260" y2="140" stroke="#6a8a6a" stroke-width="4"/>
+    <line x1="0" y1="20" x2="-90" y2="180" stroke="#7a9a7a" stroke-width="3"/>
+    <line x1="0" y1="20" x2="110" y2="190" stroke="#7a9a7a" stroke-width="3"/>
+    <!-- 蓮葉 -->
+    <ellipse cx="-250" cy="130" rx="150" ry="75" fill="#6a8a6a" transform="rotate(-15,-250,130)"/>
+    <ellipse cx="260" cy="140" rx="130" ry="65" fill="#6a8a6a" transform="rotate(12,260,140)"/>
+    <ellipse cx="-90" cy="180" rx="95" ry="48" fill="#7a9a7a" transform="rotate(-5,-90,180)"/>
+    <ellipse cx="110" cy="190" rx="85" ry="42" fill="#7a9a7a" transform="rotate(8,110,190)"/>
+  </g>
+</svg>
+""", unsafe_allow_html=True)
 
 
 # ==========================================
