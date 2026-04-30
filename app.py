@@ -442,8 +442,8 @@ with st.sidebar:
     )
     st.divider()
     st.markdown(
-        "<p style='font-size:11px; color:#7a8a7a; line-height:1.6; margin:0;'>"
-        "🙏 感謝<b>佛光山人間佛教研究院</b>開放星雲大師全集，支持「善緣」專案。</p>",
+        "<p style='font-size:10.5px; color:#7a8a7a; line-height:1.5; margin:0;'>"
+        "🙏 感謝<b>佛光山人間佛教研究院</b><br>開放大師全集，支持「善緣」。</p>",
         unsafe_allow_html=True,
     )
 
