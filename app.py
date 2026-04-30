@@ -63,25 +63,27 @@ st.markdown("""
         font-family: 'Noto Serif TC', 'Georgia', serif;
     }
 
+    /* 頁面背景：柔和米白漸層 */
+    .stApp {
+        background: linear-gradient(160deg, #fdf8f0 0%, #f5f0e8 40%, #eef4ee 100%);
+        min-height: 100vh;
+    }
+
     /* 主內容區 */
     .block-container {
         padding-top: 2.5rem;
         padding-bottom: 2rem;
         max-width: 740px;
-        background-color: #fdfaf6;
-    }
-
-    /* 頁面底色 */
-    .stApp {
-        background-color: #fdfaf6;
+        background: transparent;
     }
 
     /* 標題 */
     h1 {
         font-weight: 300;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.15em;
         color: #4a5568;
-        font-size: 2rem !important;
+        font-size: 2.2rem !important;
+        text-shadow: 0 1px 3px rgba(180,160,140,0.15);
     }
 
     /* 副標題 */
@@ -89,46 +91,72 @@ st.markdown("""
         color: #9aab9a;
         font-size: 14px;
         margin-top: -8px;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.12em;
+    }
+
+    /* 頂部裝飾橫幅 */
+    .top-banner {
+        background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(200,216,192,0.3) 20%,
+            rgba(200,216,192,0.5) 50%,
+            rgba(200,216,192,0.3) 80%,
+            transparent 100%);
+        height: 2px;
+        border-radius: 2px;
+        margin: 0.5rem 0 1.5rem 0;
+    }
+
+    /* 標題裝飾文字 */
+    .deco-line {
+        text-align: center;
+        color: #c8d8c0;
+        font-size: 11px;
+        letter-spacing: 0.4em;
+        margin-bottom: 1.5rem;
     }
 
     /* 分隔線 */
     hr {
         border: none;
-        border-top: 1px solid #e8e0d5;
+        border-top: 1px solid rgba(200,185,168,0.4);
         margin: 1rem 0;
     }
 
-    /* 聊天泡泡 - 助理 */
-    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]),
-    div[data-testid="stChatMessage"][class*="assistant"] {
-        background-color: #f5f0e8 !important;
-        border-radius: 12px;
-        border-left: 3px solid #c8d8c0;
+    /* 聊天泡泡 - 助理：玻璃霧面卡片 */
+    [data-testid="stChatMessage"] {
+        background: rgba(255,255,255,0.55) !important;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-radius: 16px !important;
+        border: 1px solid rgba(200,216,192,0.4) !important;
+        box-shadow: 0 4px 16px rgba(160,180,150,0.10), 0 1px 4px rgba(180,160,140,0.08);
         padding: 0.8rem 1rem;
-    }
-
-    /* 聊天泡泡 - 使用者 */
-    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]),
-    div[data-testid="stChatMessage"][class*="user"] {
-        background-color: #eef4ee !important;
-        border-radius: 12px;
-        border-left: 3px solid #a8c4a8;
-        padding: 0.8rem 1rem;
+        margin-bottom: 0.8rem;
     }
 
     /* 聊天文字 */
     .stChatMessage p {
         font-size: 16px;
-        line-height: 1.85;
+        line-height: 1.9;
         color: #3d3d3d;
+    }
+
+    /* 輸入框容器：玻璃卡片 */
+    [data-testid="stChatInput"] {
+        background: rgba(255,255,255,0.6) !important;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 16px !important;
+        border: 1px solid rgba(200,185,168,0.5) !important;
+        box-shadow: 0 4px 20px rgba(160,140,120,0.10);
+        padding-top: 0.3rem;
     }
 
     /* 輸入框 */
     [data-testid="stChatInput"] textarea {
-        background-color: #fdf8f2 !important;
-        border: 1px solid #d4c9b8 !important;
-        border-radius: 12px !important;
+        background: transparent !important;
+        border: none !important;
         font-family: 'Noto Serif TC', serif;
         font-size: 15px;
         color: #3d3d3d;
@@ -136,93 +164,114 @@ st.markdown("""
         padding: 16px 20px !important;
     }
 
-    /* 輸入框外層容器 */
-    [data-testid="stChatInput"] {
-        padding-top: 0.5rem;
-    }
-
-    /* 清除按鈕對齊右下 */
-    div[data-testid="stHorizontalBlock"] .stButton > button {
-        font-size: 12px;
-        padding: 0.2rem 0.6rem;
-        background-color: #f0ebe3;
-        border-color: #d4c9b8;
-        color: #888;
-        border-radius: 16px;
-    }
-
     /* Sidebar */
     [data-testid="stSidebar"] {
-        background-color: #f8f4ee;
-        border-right: 1px solid #e8e0d5;
+        background: linear-gradient(180deg, #f8f3eb 0%, #f2efe8 100%);
+        border-right: 1px solid rgba(200,185,168,0.3);
+        box-shadow: 2px 0 12px rgba(180,160,140,0.08);
     }
 
-    [data-testid="stSidebar"] p {
-        font-size: 14px;
-        line-height: 1.9;
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] small {
+        font-size: 13px;
+        line-height: 1.95;
         color: #5a5a5a;
     }
 
-    [data-testid="stSidebar"] h3 {
+    [data-testid="stSidebar"] h4 {
         color: #7a9a7a;
         font-weight: 400;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.12em;
+        font-size: 1rem;
     }
 
-    /* 按鈕 */
+    /* 按鈕：圓潤光澤 */
     .stButton > button {
-        background-color: #e8f0e8;
-        border: 1px solid #b8d0b8;
+        background: linear-gradient(135deg, #eef4ee 0%, #e4ede4 100%);
+        border: 1px solid rgba(168,196,168,0.6);
         border-radius: 20px;
         color: #4a6a4a;
         font-family: 'Noto Serif TC', serif;
         font-size: 13px;
         padding: 0.3rem 1rem;
-        transition: all 0.2s ease;
+        transition: all 0.25s ease;
+        box-shadow: 0 2px 6px rgba(140,180,140,0.12);
     }
 
     .stButton > button:hover {
-        background-color: #d4e8d4;
-        border-color: #8ab08a;
+        background: linear-gradient(135deg, #e0ece0 0%, #d4e8d4 100%);
+        border-color: rgba(138,176,138,0.8);
         color: #2a4a2a;
+        box-shadow: 0 4px 12px rgba(140,180,140,0.2);
+        transform: translateY(-1px);
     }
 
-    /* 祈福禮區塊 */
+    /* 清除按鈕（右側小按鈕）*/
+    div[data-testid="stHorizontalBlock"] .stButton > button {
+        font-size: 12px;
+        padding: 0.2rem 0.7rem;
+        background: linear-gradient(135deg, #f5ede3 0%, #ede3d5 100%);
+        border-color: rgba(200,185,168,0.6);
+        color: #8a7a6a;
+        box-shadow: 0 1px 4px rgba(180,160,140,0.10);
+    }
+
+    /* 祈福禮區塊：質感卡片 */
     .blessing-box {
-        background: linear-gradient(135deg, #f5f0e8 0%, #eef4ee 100%);
-        border: 1px solid #c8d8c0;
-        border-radius: 16px;
-        padding: 1.2rem 1.5rem;
-        margin: 1rem 0;
+        background: linear-gradient(135deg,
+            rgba(255,255,255,0.7) 0%,
+            rgba(238,244,238,0.7) 100%);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(200,216,192,0.5);
+        border-radius: 20px;
+        padding: 1.5rem 2rem;
+        margin: 1.2rem 0;
         text-align: center;
+        box-shadow:
+            0 8px 32px rgba(140,180,140,0.12),
+            0 2px 8px rgba(180,160,140,0.08),
+            inset 0 1px 0 rgba(255,255,255,0.8);
         position: relative;
+        overflow: hidden;
+    }
+
+    .blessing-box::after {
+        content: "";
+        position: absolute;
+        top: -30px; right: -30px;
+        width: 100px; height: 100px;
+        background: radial-gradient(circle, rgba(200,216,192,0.2) 0%, transparent 70%);
+        pointer-events: none;
     }
 
     .blessing-box::before {
         content: "🪷";
-        font-size: 1.5rem;
+        font-size: 1.6rem;
         display: block;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.6rem;
+        filter: drop-shadow(0 2px 4px rgba(180,140,140,0.2));
     }
 
     .blessing-title {
         color: #7a9a7a;
-        font-size: 12px;
-        letter-spacing: 0.2em;
-        margin-bottom: 0.6rem;
+        font-size: 11px;
+        letter-spacing: 0.3em;
+        margin-bottom: 0.8rem;
     }
 
     .blessing-quote {
         color: #4a5568;
         font-size: 15px;
-        line-height: 1.9;
+        line-height: 2;
         font-style: italic;
     }
 
     .blessing-source {
         color: #9aab9a;
         font-size: 11px;
-        margin-top: 0.6rem;
+        margin-top: 0.8rem;
+        letter-spacing: 0.05em;
     }
 
     /* caption 文字 */
@@ -387,16 +436,16 @@ with st.sidebar:
         "我相信，經由陪伴與對話，你能找到自己的答案。"
     )
     st.divider()
-    st.markdown("🙏 **感謝佛光山人間佛教研究院**", unsafe_allow_html=False)
-    st.caption("開放星雲大師全集，支持「善緣」專案。")
+    st.caption("🙏 **感謝佛光山人間佛教研究院**開放星雲大師全集，支持「善緣」專案。")
 
 
 # ==========================================
 # 主頁面標題
 # ==========================================
+st.markdown('<div class="deco-line">✦ &nbsp; &nbsp; ✦ &nbsp; &nbsp; ✦</div>', unsafe_allow_html=True)
 st.markdown("# 🪷 善緣")
 st.markdown('<p class="subtitle">在這裡陪你走一段路</p>', unsafe_allow_html=True)
-st.markdown("---")
+st.markdown('<div class="top-banner"></div>', unsafe_allow_html=True)
 
 
 # ==========================================
