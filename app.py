@@ -368,43 +368,20 @@ client = get_client()
 # Sidebar
 # ==========================================
 with st.sidebar:
-    st.markdown("### 🪷 善緣")
-    st.markdown(
+    st.markdown("#### 🪷 善緣")
+    st.caption(
         "深受人間佛教薰陶的在家陪伴者。"
         "用真誠、尊重、不評判的心，點一盞小燈，陪你走一段路。"
         "不論有無宗教信仰，都歡迎。"
     )
     st.divider()
-
-    # 請善緣賜福按鈕
-    if st.button("🌸 請善緣賜福"):
-        conversation_text = " ".join(
-            m["content"] for m in st.session_state.get("messages", [])
-        ) or "平安 溫暖 陪伴"
-        blessing = get_blessing(corpus, conversation_text)
-        if blessing:
-            st.session_state["manual_blessing"] = blessing
-
-    st.divider()
-
-    # 語料庫狀態（不顯示給使用者）
-    # if not corpus.empty: st.caption(...)  # 已隱藏
-
-    # 清除對話（靠近使用者輸入區）
     if st.button("🗑️ 清除對話"):
         st.session_state.messages = []
-        st.session_state.pop("manual_blessing", None)
         st.session_state.pop("auto_blessing", None)
         st.rerun()
-
     st.divider()
-
-    # 感謝聲明（明顯位置，放在清除對話下方）
-    st.markdown(
-        "🙏 **感謝佛光山人間佛教研究院**\n\n"
-        "開放星雲大師全集，支持「善緣」專案。",
-        unsafe_allow_html=False,
-    )
+    st.markdown("🙏 **感謝佛光山人間佛教研究院**", unsafe_allow_html=False)
+    st.caption("開放星雲大師全集，支持「善緣」專案。")
 
 
 # ==========================================
@@ -427,16 +404,6 @@ if "messages" not in st.session_state:
     ]
 if "auto_blessing" not in st.session_state:
     st.session_state.auto_blessing = None
-if "manual_blessing" not in st.session_state:
-    st.session_state.manual_blessing = None
-
-
-# ==========================================
-# 顯示手動祈福禮（Sidebar 按鈕觸發）
-# ==========================================
-if st.session_state.manual_blessing:
-    show_blessing(st.session_state.manual_blessing)
-    st.session_state.manual_blessing = None
 
 
 # ==========================================
@@ -468,7 +435,16 @@ if user_input := st.chat_input("想說什麼？"):
     )
     retrieved = retrieve(corpus, recent_text)
     retrieval_block = format_retrieved(retrieved)
-    full_system = system_prompt + retrieval_block
+
+    # 道別時加入給善緣的提示，讓回應自然溫暖地收尾
+    farewell_instruction = ""
+    if farewell:
+        farewell_instruction = (
+            "\n\n---\n【本輪提示】使用者正在道別。"
+            "請用溫暖自然的語氣與他們道別，簡短真誠，像朋友分別時說的最後一句話。\n"
+        )
+
+    full_system = system_prompt + retrieval_block + farewell_instruction
 
     # 串流回應
     with st.chat_message("assistant", avatar="🪷"):
@@ -492,17 +468,18 @@ if user_input := st.chat_input("想說什麼？"):
             full_response = f"（連線出了點狀況：{e}）"
             placeholder.markdown(full_response)
 
-        # 若偵測到道別，自動附上祈福禮
+        # 道別時：依整段對話脈絡，自動選出最貼近的大師金句作為祈福禮
         auto_blessing = None
         if farewell:
-            conversation_text = " ".join(
+            full_conversation = " ".join(
                 m["content"] for m in st.session_state.messages
+                if m["role"] == "user"
             )
-            auto_blessing = get_blessing(corpus, conversation_text)
+            auto_blessing = get_blessing(corpus, full_conversation)
             if auto_blessing:
                 show_blessing(auto_blessing)
 
-    # 儲存訊息（含祈福禮）
+    # 儲存訊息（含祈福禮，重新整理時一起顯示）
     msg_entry: dict = {"role": "assistant", "content": full_response}
     if auto_blessing:
         msg_entry["blessing"] = auto_blessing
