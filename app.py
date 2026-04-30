@@ -65,8 +65,18 @@ st.markdown("""
 
     /* 頁面背景：柔和米白漸層 */
     .stApp {
-        background: linear-gradient(160deg, #fdf8f0 0%, #f5f0e8 40%, #eef4ee 100%);
+        background: linear-gradient(160deg, #fdf8f0 0%, #f5f0e8 40%, #eef4ee 100%) !important;
         min-height: 100vh;
+    }
+
+    /* 覆蓋 Streamlit 預設白底 */
+    .stApp > div, [data-testid="stAppViewContainer"] {
+        background: transparent !important;
+    }
+
+    [data-testid="stHeader"] {
+        background: rgba(253,248,240,0.8) !important;
+        backdrop-filter: blur(8px);
     }
 
     /* 主內容區 */
@@ -74,7 +84,7 @@ st.markdown("""
         padding-top: 2.5rem;
         padding-bottom: 2rem;
         max-width: 740px;
-        background: transparent;
+        background: transparent !important;
     }
 
     /* 標題 */
@@ -123,14 +133,12 @@ st.markdown("""
         margin: 1rem 0;
     }
 
-    /* 聊天泡泡 - 助理：玻璃霧面卡片 */
+    /* 聊天泡泡：溫暖卡片 */
     [data-testid="stChatMessage"] {
-        background: rgba(255,255,255,0.55) !important;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
+        background: rgba(255,252,247,0.92) !important;
         border-radius: 16px !important;
-        border: 1px solid rgba(200,216,192,0.4) !important;
-        box-shadow: 0 4px 16px rgba(160,180,150,0.10), 0 1px 4px rgba(180,160,140,0.08);
+        border: 1px solid rgba(200,216,192,0.5) !important;
+        box-shadow: 0 2px 12px rgba(160,180,150,0.12), 0 1px 3px rgba(180,160,140,0.08);
         padding: 0.8rem 1rem;
         margin-bottom: 0.8rem;
     }
@@ -142,14 +150,12 @@ st.markdown("""
         color: #3d3d3d;
     }
 
-    /* 輸入框容器：玻璃卡片 */
+    /* 輸入框容器 */
     [data-testid="stChatInput"] {
-        background: rgba(255,255,255,0.6) !important;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        background: rgba(255,252,247,0.95) !important;
         border-radius: 16px !important;
         border: 1px solid rgba(200,185,168,0.5) !important;
-        box-shadow: 0 4px 20px rgba(160,140,120,0.10);
+        box-shadow: 0 2px 16px rgba(160,140,120,0.10);
         padding-top: 0.3rem;
     }
 
