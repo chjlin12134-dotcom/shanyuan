@@ -283,12 +283,14 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 右側花瓣（標題旁，position relative height=0）
+# 散落花瓣（相對於內容區定位，不用fixed）
 st.markdown("""
 <div style="pointer-events:none; position:relative; height:0; overflow:visible;">
-  <span style="position:absolute; font-size:38px; opacity:0.09; top:10px; right:-40px; transform:rotate(-15deg);">🪷</span>
-  <span style="position:absolute; font-size:22px; opacity:0.07; top:70px; right:-25px; transform:rotate(20deg);">🪷</span>
-  <span style="position:absolute; font-size:26px; opacity:0.08; top:140px; right:-35px; transform:rotate(8deg);">🪷</span>
+  <span style="position:absolute; font-size:38px; opacity:0.09; top:10px; left:-30px; transform:rotate(-15deg);">🪷</span>
+  <span style="position:absolute; font-size:22px; opacity:0.07; top:30px; right:-20px; transform:rotate(20deg);">🪷</span>
+  <span style="position:absolute; font-size:28px; opacity:0.08; top:80px; left:20px; transform:rotate(10deg);">🪷</span>
+  <span style="position:absolute; font-size:18px; opacity:0.07; top:60px; right:10px; transform:rotate(-25deg);">🪷</span>
+  <span style="position:absolute; font-size:32px; opacity:0.065; top:130px; right:-10px; transform:rotate(8deg);">🪷</span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -510,14 +512,6 @@ for msg in st.session_state.messages:
             show_blessing(msg["blessing"])
 
 
-
-# 左側花瓣：對話框下方、輸入框上方
-st.markdown("""
-<div style="pointer-events:none; position:relative; height:0; overflow:visible;">
-  <span style="position:absolute; font-size:30px; opacity:0.09; top:-10px; left:-35px; transform:rotate(15deg);">🪷</span>
-  <span style="position:absolute; font-size:20px; opacity:0.07; top:15px; left:10px; transform:rotate(-12deg);">🪷</span>
-</div>
-""", unsafe_allow_html=True)
 
 # ==========================================
 # 使用者輸入
