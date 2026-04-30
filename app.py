@@ -279,7 +279,41 @@ st.markdown("""
         color: #7a8a7a;
         font-size: 14px;
     }
+
+    /* 散落花瓣裝飾 */
+    .block-container::before {
+        content: "🪷";
+        position: fixed;
+        font-size: 48px;
+        opacity: 0.07;
+        top: 22%;
+        left: 58%;
+        transform: rotate(-20deg);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .block-container::after {
+        content: "🪷";
+        position: fixed;
+        font-size: 32px;
+        opacity: 0.06;
+        top: 60%;
+        left: 72%;
+        transform: rotate(15deg);
+        pointer-events: none;
+        z-index: 0;
+    }
 </style>
+""", unsafe_allow_html=True)
+
+# 額外花瓣（CSS 偽元素只能兩個，其餘用 HTML）
+st.markdown("""
+<div style="pointer-events:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; overflow:hidden;">
+  <span style="position:absolute; font-size:28px; opacity:0.055; top:40%; left:62%; transform:rotate(30deg);">🪷</span>
+  <span style="position:absolute; font-size:22px; opacity:0.05; top:75%; left:55%; transform:rotate(-10deg);">🪷</span>
+  <span style="position:absolute; font-size:38px; opacity:0.06; top:15%; left:80%; transform:rotate(5deg);">🪷</span>
+</div>
 """, unsafe_allow_html=True)
 
 
@@ -435,9 +469,9 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
     st.caption(
-        "這是善緣，一個深受人間佛教薰陶的在家陪伴者，"
-        "在星雲大師智慧的啟發下，學習用真誠、尊重、不評判的心陪伴每一個人。\n\n"
-        "不論你有什麼信仰，或者沒有宗教信仰，只要你想說說話，善緣都在這裡陪你。\n\n"
+        "這是善緣，深受人間佛教薰陶的在家陪伴者，"
+        "在星雲大師智慧啟發下，用真誠、尊重、不評判的心陪伴每一個人。\n\n"
+        "不論你有什麼信仰，只要想說說話，善緣都在這裡陪你。\n\n"
         "相信經由陪伴與對話，你能找到自己的答案。"
     )
     st.divider()
