@@ -516,7 +516,7 @@ for msg in st.session_state.messages:
 # ==========================================
 # 語音輸入（Groq Whisper）
 # ==========================================
-with st.expander("🎙️ 語音輸入", expanded=False):
+with st.expander("🎙️ 語音輸入", expanded=True):
     lang_choice = st.radio(
         "語言",
         ["繁體中文", "簡體中文"],
