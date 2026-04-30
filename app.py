@@ -515,72 +515,113 @@ for msg in st.session_state.messages:
 
 
 # ==========================================
-# 語音輸入元件
+# 語音輸入元件（固定在右下角）
 # ==========================================
 components.html("""
-<div style="display:flex; justify-content:flex-end; padding: 0 0 6px 0;">
-  <button id="micBtn" onclick="toggleSpeech()" title="語音輸入"
-    style="background:linear-gradient(135deg,#eef4ee,#e4ede4);
-           border:1px solid rgba(168,196,168,0.6); border-radius:50%;
-           width:42px; height:42px; cursor:pointer; font-size:20px;
-           box-shadow:0 2px 8px rgba(140,180,140,0.15);
-           display:flex; align-items:center; justify-content:center;
-           transition: all 0.2s;">🎙️</button>
-  <div id="statusMsg" style="font-size:12px; color:#9aab9a; margin-left:8px;
-       align-self:center; font-family:'Noto Serif TC',serif;"></div>
-</div>
 <script>
 let recognition = null;
 let listening = false;
 
-function toggleSpeech() {
-  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-    document.getElementById('statusMsg').innerText = '您的瀏覽器不支援語音輸入，請用 Chrome';
-    return;
-  }
-  if (listening) {
-    recognition.stop();
-    return;
-  }
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  recognition = new SpeechRecognition();
-  recognition.lang = 'zh-TW';
-  recognition.continuous = false;
-  recognition.interimResults = false;
+// 把按鈕注入到父頁面，固定在右下角
+const parentDoc = window.parent.document;
 
-  recognition.onstart = () => {
-    listening = true;
-    document.getElementById('micBtn').innerText = '⏹️';
-    document.getElementById('micBtn').style.background = 'linear-gradient(135deg,#fde8e8,#f8d0d0)';
-    document.getElementById('statusMsg').innerText = '聆聽中…';
-  };
+// 避免重複注入
+if (!parentDoc.getElementById('shanyuan-mic-btn')) {
+  const btn = parentDoc.createElement('button');
+  btn.id = 'shanyuan-mic-btn';
+  btn.title = '語音輸入';
+  btn.innerHTML = '🎙️';
+  btn.style.cssText = `
+    position: fixed;
+    bottom: 130px;
+    right: 24px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(168,196,168,0.6);
+    background: linear-gradient(135deg,#eef4ee,#e4ede4);
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(140,180,140,0.2);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  `;
 
-  recognition.onresult = (e) => {
-    const text = e.results[0][0].transcript;
-    const textarea = window.parent.document.querySelector('textarea[data-testid="stChatInputTextArea"]');
-    if (textarea) {
-      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
-      nativeInputValueSetter.call(textarea, text);
-      textarea.dispatchEvent(new Event('input', { bubbles: true }));
-      textarea.focus();
+  const status = parentDoc.createElement('div');
+  status.id = 'shanyuan-mic-status';
+  status.style.cssText = `
+    position: fixed;
+    bottom: 108px;
+    right: 74px;
+    font-size: 12px;
+    color: #9aab9a;
+    font-family: 'Noto Serif TC', serif;
+    z-index: 9999;
+    background: rgba(253,248,240,0.9);
+    padding: 2px 8px;
+    border-radius: 8px;
+    display: none;
+  `;
+
+  parentDoc.body.appendChild(btn);
+  parentDoc.body.appendChild(status);
+
+  btn.addEventListener('click', () => {
+    if (!('webkitSpeechRecognition' in window.parent) && !('SpeechRecognition' in window.parent)) {
+      status.innerText = '請用 Chrome 瀏覽器';
+      status.style.display = 'block';
+      return;
     }
-    document.getElementById('statusMsg').innerText = '✓ ' + text;
-  };
+    if (listening) {
+      recognition.stop();
+      return;
+    }
+    const SR = window.parent.SpeechRecognition || window.parent.webkitSpeechRecognition;
+    recognition = new SR();
+    recognition.lang = 'zh-TW';
+    recognition.continuous = false;
+    recognition.interimResults = false;
 
-  recognition.onerror = (e) => {
-    document.getElementById('statusMsg').innerText = '辨識失敗，請再試一次';
-  };
+    recognition.onstart = () => {
+      listening = true;
+      btn.innerHTML = '⏹️';
+      btn.style.background = 'linear-gradient(135deg,#fde8e8,#f8d0d0)';
+      status.innerText = '聆聽中…';
+      status.style.display = 'block';
+    };
 
-  recognition.onend = () => {
-    listening = false;
-    document.getElementById('micBtn').innerText = '🎙️';
-    document.getElementById('micBtn').style.background = 'linear-gradient(135deg,#eef4ee,#e4ede4)';
-  };
+    recognition.onresult = (e) => {
+      const text = e.results[0][0].transcript;
+      const textarea = parentDoc.querySelector('textarea[data-testid="stChatInputTextArea"]');
+      if (textarea) {
+        const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
+        setter.call(textarea, text);
+        textarea.dispatchEvent(new Event('input', { bubbles: true }));
+        textarea.focus();
+      }
+      status.innerText = '✓ ' + text;
+      setTimeout(() => { status.style.display = 'none'; }, 3000);
+    };
 
-  recognition.start();
+    recognition.onerror = () => {
+      status.innerText = '辨識失敗，請再試';
+      setTimeout(() => { status.style.display = 'none'; }, 2000);
+    };
+
+    recognition.onend = () => {
+      listening = false;
+      btn.innerHTML = '🎙️';
+      btn.style.background = 'linear-gradient(135deg,#eef4ee,#e4ede4)';
+    };
+
+    recognition.start();
+  });
 }
 </script>
-""", height=55)
+""", height=0)
 
 # ==========================================
 # 使用者輸入
