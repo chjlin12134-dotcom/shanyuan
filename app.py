@@ -441,48 +441,69 @@ corpus = load_corpus()
 system_prompt = load_system_prompt()
 client = get_client()
 
-# 蓮花水印（固定浮層，覆蓋整個視窗）
+# 蓮花圓框水印（固定浮層）
 st.markdown("""
-<svg class="lotus-bg" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg">
-  <g transform="translate(350,340)">
-    <!-- 外層花瓣 8片 -->
-    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(0)"/>
-    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(45)"/>
-    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(90)"/>
-    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(135)"/>
-    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(180)"/>
-    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(225)"/>
-    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(270)"/>
-    <ellipse cx="0" cy="-180" rx="45" ry="100" fill="#a08080" transform="rotate(315)"/>
-    <!-- 中層花瓣 8片 -->
-    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(22.5)"/>
-    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(67.5)"/>
-    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(112.5)"/>
-    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(157.5)"/>
-    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(202.5)"/>
-    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(247.5)"/>
-    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(292.5)"/>
-    <ellipse cx="0" cy="-120" rx="35" ry="80" fill="#b09090" transform="rotate(337.5)"/>
-    <!-- 內層花瓣 6片 -->
-    <ellipse cx="0" cy="-70" rx="25" ry="55" fill="#c0a0a0" transform="rotate(0)"/>
-    <ellipse cx="0" cy="-70" rx="25" ry="55" fill="#c0a0a0" transform="rotate(60)"/>
-    <ellipse cx="0" cy="-70" rx="25" ry="55" fill="#c0a0a0" transform="rotate(120)"/>
-    <ellipse cx="0" cy="-70" rx="25" ry="55" fill="#c0a0a0" transform="rotate(180)"/>
-    <ellipse cx="0" cy="-70" rx="25" ry="55" fill="#c0a0a0" transform="rotate(240)"/>
-    <ellipse cx="0" cy="-70" rx="25" ry="55" fill="#c0a0a0" transform="rotate(300)"/>
-    <!-- 花心 -->
-    <circle cx="0" cy="0" r="28" fill="#c8b870"/>
-    <circle cx="0" cy="0" r="16" fill="#d4c880"/>
-    <!-- 蓮梗 -->
-    <line x1="0" y1="20" x2="-250" y2="130" stroke="#6a8a6a" stroke-width="5"/>
-    <line x1="0" y1="20" x2="260" y2="140" stroke="#6a8a6a" stroke-width="4"/>
-    <line x1="0" y1="20" x2="-90" y2="180" stroke="#7a9a7a" stroke-width="3"/>
-    <line x1="0" y1="20" x2="110" y2="190" stroke="#7a9a7a" stroke-width="3"/>
-    <!-- 蓮葉 -->
-    <ellipse cx="-250" cy="130" rx="150" ry="75" fill="#6a8a6a" transform="rotate(-15,-250,130)"/>
-    <ellipse cx="260" cy="140" rx="130" ry="65" fill="#6a8a6a" transform="rotate(12,260,140)"/>
-    <ellipse cx="-90" cy="180" rx="95" ry="48" fill="#7a9a7a" transform="rotate(-5,-90,180)"/>
-    <ellipse cx="110" cy="190" rx="85" ry="42" fill="#7a9a7a" transform="rotate(8,110,190)"/>
+<svg class="lotus-bg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(250,250)">
+    <!-- 圓形藤蔓框 -->
+    <circle cx="0" cy="0" r="180" fill="none" stroke="#7a9a6a" stroke-width="2.5" stroke-dasharray="6,4"/>
+    <circle cx="0" cy="0" r="175" fill="none" stroke="#8aaa7a" stroke-width="1" opacity="0.5"/>
+
+    <!-- 蓮花1：頂部 -->
+    <g transform="translate(0,-178)">
+      <ellipse cx="-12" cy="-18" rx="10" ry="22" fill="#e8a0a8" transform="rotate(-20)"/>
+      <ellipse cx="12" cy="-18" rx="10" ry="22" fill="#e8a0a8" transform="rotate(20)"/>
+      <ellipse cx="0" cy="-22" rx="9" ry="20" fill="#f0b0b8"/>
+      <ellipse cx="-7" cy="-10" rx="8" ry="16" fill="#f4c0c4" transform="rotate(-10)"/>
+      <ellipse cx="7" cy="-10" rx="8" ry="16" fill="#f4c0c4" transform="rotate(10)"/>
+      <ellipse cx="0" cy="-8" rx="7" ry="14" fill="#f8d0d0"/>
+      <circle cx="0" cy="2" r="5" fill="#f0d060"/>
+    </g>
+
+    <!-- 蓮花2：右下 -->
+    <g transform="translate(155,100) rotate(30)">
+      <ellipse cx="-10" cy="-15" rx="9" ry="19" fill="#e8a0a8" transform="rotate(-20)"/>
+      <ellipse cx="10" cy="-15" rx="9" ry="19" fill="#e8a0a8" transform="rotate(20)"/>
+      <ellipse cx="0" cy="-18" rx="8" ry="17" fill="#f0b0b8"/>
+      <ellipse cx="-6" cy="-8" rx="7" ry="14" fill="#f4c0c4" transform="rotate(-10)"/>
+      <ellipse cx="6" cy="-8" rx="7" ry="14" fill="#f4c0c4" transform="rotate(10)"/>
+      <circle cx="0" cy="2" r="4" fill="#f0d060"/>
+    </g>
+
+    <!-- 蓮花3：左下 -->
+    <g transform="translate(-155,100) rotate(-30)">
+      <ellipse cx="-10" cy="-15" rx="9" ry="19" fill="#e8a0a8" transform="rotate(-20)"/>
+      <ellipse cx="10" cy="-15" rx="9" ry="19" fill="#e8a0a8" transform="rotate(20)"/>
+      <ellipse cx="0" cy="-18" rx="8" ry="17" fill="#f0b0b8"/>
+      <ellipse cx="-6" cy="-8" rx="7" ry="14" fill="#f4c0c4" transform="rotate(-10)"/>
+      <ellipse cx="6" cy="-8" rx="7" ry="14" fill="#f4c0c4" transform="rotate(10)"/>
+      <circle cx="0" cy="2" r="4" fill="#f0d060"/>
+    </g>
+
+    <!-- 圓形大葉子1：底部左 -->
+    <g transform="translate(-60,170)">
+      <ellipse cx="0" cy="0" rx="42" ry="38" fill="#6a9a6a"/>
+      <line x1="0" y1="-38" x2="0" y2="38" stroke="#5a8a5a" stroke-width="1.5"/>
+      <line x1="-42" y1="0" x2="42" y2="0" stroke="#5a8a5a" stroke-width="1"/>
+      <line x1="-30" y1="-24" x2="30" y2="24" stroke="#5a8a5a" stroke-width="0.8"/>
+      <line x1="30" y1="-24" x2="-30" y2="24" stroke="#5a8a5a" stroke-width="0.8"/>
+    </g>
+
+    <!-- 圓形大葉子2：底部右 -->
+    <g transform="translate(65,168)">
+      <ellipse cx="0" cy="0" rx="38" ry="35" fill="#7aaa7a"/>
+      <line x1="0" y1="-35" x2="0" y2="35" stroke="#6a9a6a" stroke-width="1.5"/>
+      <line x1="-38" y1="0" x2="38" y2="0" stroke="#6a9a6a" stroke-width="1"/>
+      <line x1="-27" y1="-22" x2="27" y2="22" stroke="#6a9a6a" stroke-width="0.8"/>
+      <line x1="27" y1="-22" x2="-27" y2="22" stroke="#6a9a6a" stroke-width="0.8"/>
+    </g>
+
+    <!-- 藤蔓連接線 -->
+    <path d="M0,-175 Q20,-140 0,-120" stroke="#7a9a6a" stroke-width="1.5" fill="none"/>
+    <path d="M152,98 Q120,80 100,60" stroke="#7a9a6a" stroke-width="1.5" fill="none"/>
+    <path d="M-152,98 Q-120,80 -100,60" stroke="#7a9a6a" stroke-width="1.5" fill="none"/>
+    <path d="M-55,168 Q-40,140 -20,120" stroke="#7a9a6a" stroke-width="1.5" fill="none"/>
+    <path d="M60,165 Q45,138 22,118" stroke="#7a9a6a" stroke-width="1.5" fill="none"/>
   </g>
 </svg>
 """, unsafe_allow_html=True)
