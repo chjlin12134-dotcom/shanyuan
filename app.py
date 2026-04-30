@@ -280,46 +280,17 @@ st.markdown("""
         font-size: 14px;
     }
 
-    /* 散落花瓣裝飾（CSS偽元素） */
-    .block-container::before {
-        content: "🪷";
-        position: fixed;
-        font-size: 40px;
-        opacity: 0.07;
-        top: 43%;
-        left: 48%;
-        transform: rotate(12deg);
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    .block-container::after {
-        content: "🪷";
-        position: fixed;
-        font-size: 18px;
-        opacity: 0.055;
-        top: 68%;
-        left: 93%;
-        transform: rotate(-18deg);
-        pointer-events: none;
-        z-index: 0;
-    }
 </style>
 """, unsafe_allow_html=True)
 
-# 散落花瓣
+# 散落花瓣（相對於內容區定位，不用fixed）
 st.markdown("""
-<div style="pointer-events:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; overflow:hidden;">
-  <!-- 左中：開場白與輸入框之間 -->
-  <span style="position:absolute; font-size:36px; opacity:0.08; top:38%; left:52%; transform:rotate(-15deg);">🪷</span>
-  <!-- 左中偏下 -->
-  <span style="position:absolute; font-size:22px; opacity:0.06; top:48%; left:56%; transform:rotate(10deg);">🪷</span>
-  <!-- 右中：輸入框右側 -->
-  <span style="position:absolute; font-size:28px; opacity:0.07; top:55%; left:91%; transform:rotate(20deg);">🪷</span>
-  <!-- 左下 -->
-  <span style="position:absolute; font-size:20px; opacity:0.06; top:78%; left:50%; transform:rotate(-8deg);">🪷</span>
-  <!-- 右下 -->
-  <span style="position:absolute; font-size:24px; opacity:0.065; top:80%; left:88%; transform:rotate(25deg);">🪷</span>
+<div style="pointer-events:none; position:relative; height:0; overflow:visible;">
+  <span style="position:absolute; font-size:38px; opacity:0.09; top:10px; left:-30px; transform:rotate(-15deg);">🪷</span>
+  <span style="position:absolute; font-size:22px; opacity:0.07; top:30px; right:-20px; transform:rotate(20deg);">🪷</span>
+  <span style="position:absolute; font-size:28px; opacity:0.08; top:80px; left:20px; transform:rotate(10deg);">🪷</span>
+  <span style="position:absolute; font-size:18px; opacity:0.07; top:60px; right:10px; transform:rotate(-25deg);">🪷</span>
+  <span style="position:absolute; font-size:32px; opacity:0.065; top:130px; right:-10px; transform:rotate(8deg);">🪷</span>
 </div>
 """, unsafe_allow_html=True)
 
