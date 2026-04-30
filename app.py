@@ -92,12 +92,23 @@ st.markdown("""
         background: rgba(253,248,240,0.85) !important;
     }
 
-    /* 主內容區 */
+    /* 主內容區：移除 Streamlit 預設頂部空白 */
     .block-container {
-        padding-top: 1rem;
+        padding-top: 0rem !important;
         padding-bottom: 1.5rem;
         max-width: min(740px, 92vw);
         background: transparent !important;
+    }
+
+    /* 移除 Streamlit 頂部工具列佔位空間 */
+    [data-testid="stAppViewContainer"] > section:first-child {
+        padding-top: 0 !important;
+    }
+
+    /* 隱藏 Streamlit 頂部預設 header 空間 */
+    [data-testid="stHeader"] {
+        height: 0 !important;
+        min-height: 0 !important;
     }
 
     /* 標題裝飾文字 */
