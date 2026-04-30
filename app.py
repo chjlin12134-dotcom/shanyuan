@@ -513,47 +513,6 @@ for msg in st.session_state.messages:
 
 
 
-# ==========================================
-# 語音輸入（Groq Whisper）
-# ==========================================
-with st.expander("🎙️ 點這裡展開語音輸入", expanded=False):
-    lang_choice = st.radio(
-        "語言",
-        ["繁體中文", "簡體中文"],
-        horizontal=True,
-        label_visibility="collapsed",
-    )
-    prompt_hint = "以下是繁體中文語音內容：" if lang_choice == "繁體中文" else "以下是简体中文语音内容："
-    audio = st.audio_input("按下錄音，說完再按停止")
-    if audio is not None:
-        groq_key = os.environ.get("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY", "")
-        if not groq_key:
-            st.warning("找不到 GROQ_API_KEY")
-        else:
-            with st.spinner("辨識中…"):
-                try:
-                    import httpx
-                    response = httpx.post(
-                        "https://api.groq.com/openai/v1/audio/transcriptions",
-                        headers={"Authorization": f"Bearer {groq_key}"},
-                        files={"file": ("audio.wav", audio.getvalue(), "audio/wav")},
-                        data={"model": "whisper-large-v3-turbo", "language": "zh", "prompt": prompt_hint},
-                        timeout=30,
-                    )
-                    result = response.json()
-                    transcript = result.get("text", "")
-                    if transcript:
-                        st.session_state["voice_input"] = transcript
-                        st.rerun()
-                    elif "error" in result:
-                        err = result["error"].get("code", "")
-                        if err == "rate_limit_exceeded":
-                            st.warning("請稍等幾秒再試一次 🙏")
-                        else:
-                            st.error(result["error"].get("message", "辨識失敗"))
-                except Exception as e:
-                    st.error(f"語音辨識失敗：{e}")
-
 # 取出語音輸入（若有）
 voice_text = st.session_state.pop("voice_input", None)
 
@@ -561,6 +520,59 @@ voice_text = st.session_state.pop("voice_input", None)
 # 使用者輸入
 # ==========================================
 user_input = voice_text or st.chat_input("想說什麼？")
+
+# ==========================================
+# 語音輸入（在文字框下方，不用 expander）
+# ==========================================
+st.markdown("<div style='height:0.5rem;'></div>", unsafe_allow_html=True)
+col_left, col_voice, col_right = st.columns([2, 3, 2])
+with col_voice:
+    lang_col1, lang_col2 = st.columns(2)
+    with lang_col1:
+        lang_trad = st.button("🎙️ 繁體語音", key="btn_trad", use_container_width=True)
+    with lang_col2:
+        lang_simp = st.button("🎙️ 简体语音", key="btn_simp", use_container_width=True)
+
+    if lang_trad or lang_simp or st.session_state.get("show_audio_input"):
+        st.session_state["show_audio_input"] = True
+        prompt_hint = "以下是繁體中文語音內容：" if (lang_trad or not lang_simp) else "以下是简体中文语音内容："
+        if lang_simp:
+            st.session_state["audio_lang"] = "simp"
+        elif lang_trad:
+            st.session_state["audio_lang"] = "trad"
+        saved_lang = st.session_state.get("audio_lang", "trad")
+        prompt_hint = "以下是繁體中文語音內容：" if saved_lang == "trad" else "以下是简体中文语音内容："
+
+        audio = st.audio_input("🎤 按下錄音，說完再按停止", key="audio_recorder", label_visibility="collapsed")
+        if audio is not None:
+            groq_key = os.environ.get("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY", "")
+            if not groq_key:
+                st.warning("找不到 GROQ_API_KEY")
+            else:
+                with st.spinner("辨識中…"):
+                    try:
+                        import httpx
+                        response = httpx.post(
+                            "https://api.groq.com/openai/v1/audio/transcriptions",
+                            headers={"Authorization": f"Bearer {groq_key}"},
+                            files={"file": ("audio.wav", audio.getvalue(), "audio/wav")},
+                            data={"model": "whisper-large-v3-turbo", "language": "zh", "prompt": prompt_hint},
+                            timeout=30,
+                        )
+                        result = response.json()
+                        transcript = result.get("text", "")
+                        if transcript:
+                            st.session_state["voice_input"] = transcript
+                            st.session_state["show_audio_input"] = False
+                            st.rerun()
+                        elif "error" in result:
+                            err = result["error"].get("code", "")
+                            if err == "rate_limit_exceeded":
+                                st.warning("請稍等幾秒再試一次 🙏")
+                            else:
+                                st.error(result["error"].get("message", "辨識失敗"))
+                    except Exception as e:
+                        st.error(f"語音辨識失敗：{e}")
 if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
