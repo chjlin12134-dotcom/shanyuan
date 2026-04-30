@@ -283,19 +283,12 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 散落花瓣（相對於內容區定位，不用fixed）
+# 右側花瓣（標題旁，position relative height=0）
 st.markdown("""
 <div style="pointer-events:none; position:relative; height:0; overflow:visible;">
-  <!-- 右側 -->
   <span style="position:absolute; font-size:38px; opacity:0.09; top:10px; right:-40px; transform:rotate(-15deg);">🪷</span>
-  <span style="position:absolute; font-size:22px; opacity:0.07; top:80px; right:-25px; transform:rotate(20deg);">🪷</span>
-  <span style="position:absolute; font-size:28px; opacity:0.08; top:150px; right:-35px; transform:rotate(8deg);">🪷</span>
-  <!-- 左側：開場白與輸入框之間 -->
-  <span style="position:absolute; font-size:32px; opacity:0.09; top:95px; left:-10px; transform:rotate(15deg);">🪷</span>
-  <span style="position:absolute; font-size:20px; opacity:0.07; top:115px; left:30px; transform:rotate(-10deg);">🪷</span>
-  <!-- 左側：輸入框下方 -->
-  <span style="position:absolute; font-size:28px; opacity:0.08; top:310px; left:-15px; transform:rotate(20deg);">🪷</span>
-  <span style="position:absolute; font-size:18px; opacity:0.07; top:345px; left:20px; transform:rotate(-15deg);">🪷</span>
+  <span style="position:absolute; font-size:22px; opacity:0.07; top:70px; right:-25px; transform:rotate(20deg);">🪷</span>
+  <span style="position:absolute; font-size:26px; opacity:0.08; top:140px; right:-35px; transform:rotate(8deg);">🪷</span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -517,6 +510,14 @@ for msg in st.session_state.messages:
             show_blessing(msg["blessing"])
 
 
+
+# 左側花瓣：對話框下方、輸入框上方
+st.markdown("""
+<div style="pointer-events:none; position:relative; height:0; overflow:visible;">
+  <span style="position:absolute; font-size:30px; opacity:0.09; top:-10px; left:-35px; transform:rotate(15deg);">🪷</span>
+  <span style="position:absolute; font-size:20px; opacity:0.07; top:15px; left:10px; transform:rotate(-12deg);">🪷</span>
+</div>
+""", unsafe_allow_html=True)
 
 # ==========================================
 # 使用者輸入
