@@ -96,7 +96,7 @@ st.markdown("""
     .block-container {
         padding-top: 2.5rem;
         padding-bottom: 2rem;
-        max-width: 740px;
+        max-width: min(740px, 92vw);
         background: transparent !important;
     }
 
@@ -192,16 +192,16 @@ st.markdown("""
 
     [data-testid="stSidebar"] p,
     [data-testid="stSidebar"] small {
-        font-size: 15px;
-        line-height: 2.0;
+        font-size: 13px;
+        line-height: 1.85;
         color: #4a4a4a;
     }
 
     [data-testid="stSidebar"] h4 {
         color: #7a9a7a;
         font-weight: 400;
-        letter-spacing: 0.12em;
-        font-size: 1rem;
+        letter-spacing: 0.10em;
+        font-size: 0.95rem;
     }
 
     /* 按鈕：圓潤光澤 */
@@ -457,9 +457,8 @@ with st.sidebar:
     )
     st.divider()
     st.markdown(
-        "<p style='font-size:13px; color:#7a8a7a; line-height:2.0; padding-bottom:1rem;'>"
-        "🙏 感謝<b>佛光山人間佛教研究院</b><br>"
-        "開放星雲大師全集，<br>支持「善緣」專案。</p>",
+        "<p style='font-size:12px; color:#7a8a7a; line-height:1.8; padding-bottom:0.5rem;'>"
+        "🙏 感謝<b>佛光山人間佛教研究院</b>開放星雲大師全集，支持「善緣」專案。</p>",
         unsafe_allow_html=True,
     )
 
