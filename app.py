@@ -428,19 +428,23 @@ client = get_client()
 # Sidebar
 # ==========================================
 with st.sidebar:
-    st.markdown("#### 🪷 善緣")
     st.markdown(
-        "<p style='font-size:11px; color:#7a8a7a; line-height:1.6; margin:0 0 0.6rem 0;'>"
-        "🙏 感謝<b>佛光山人間佛教研究院</b>開放星雲大師全集，支持「善緣」專案。</p>",
+        "<div style='margin-top:0.5rem;'>"
+        "<span style='font-family:\"Noto Serif TC\",serif; font-size:1rem; color:#7a9a7a; letter-spacing:0.1em;'>🪷 善緣</span>"
+        "</div>",
         unsafe_allow_html=True,
     )
-    st.divider()
     st.caption(
-        "我是善緣，一個深受人間佛教薰陶的在家陪伴者，"
+        "這是善緣，一個深受人間佛教薰陶的在家陪伴者，"
         "在星雲大師智慧的啟發下，學習用真誠、尊重、不評判的心陪伴每一個人。\n\n"
-        "在我們的對話裡，我會適時分享大師的智慧話語——不是說教，只是點一盞小燈。\n\n"
         "不論你有什麼信仰，或者沒有宗教信仰，只要你想說說話，善緣都在這裡陪你。\n\n"
-        "我相信，經由陪伴與對話，你能找到自己的答案。"
+        "相信經由陪伴與對話，你能找到自己的答案。"
+    )
+    st.divider()
+    st.markdown(
+        "<p style='font-size:11px; color:#7a8a7a; line-height:1.6; margin:0;'>"
+        "🙏 感謝<b>佛光山人間佛教研究院</b>開放星雲大師全集，支持「善緣」專案。</p>",
+        unsafe_allow_html=True,
     )
 
 
@@ -448,7 +452,7 @@ with st.sidebar:
 # 主頁面標題
 # ==========================================
 st.markdown("""
-<div style="text-align:center; padding: 0.4rem 0 0.3rem 0;">
+<div style="text-align:center; padding: 0.8rem 0 0.3rem 0;">
   <div style="display:flex; align-items:center; justify-content:center; gap:0.6rem; margin-bottom:0.15rem;">
     <svg width="90" height="28" viewBox="0 0 90 28" xmlns="http://www.w3.org/2000/svg" opacity="0.55">
       <path d="M5,24 Q22,4 38,18" stroke="#a8c4a8" stroke-width="1.1" fill="none"/>
