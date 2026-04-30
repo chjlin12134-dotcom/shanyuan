@@ -442,15 +442,20 @@ with st.sidebar:
         "我相信，經由陪伴與對話，你能找到自己的答案。"
     )
     st.divider()
-    st.caption("🙏 **感謝佛光山人間佛教研究院**開放星雲大師全集，支持「善緣」專案。")
+    st.markdown(
+        "<p style='font-size:13px; color:#7a8a7a; line-height:1.8;'>"
+        "🙏 感謝<b>佛光山人間佛教研究院</b><br>"
+        "開放星雲大師全集，支持「善緣」專案。</p>",
+        unsafe_allow_html=True,
+    )
 
 
 # ==========================================
 # 主頁面標題
 # ==========================================
 st.markdown("""
-<div style="text-align:center; padding: 0.5rem 0 0.2rem 0;">
-  <svg width="320" height="60" viewBox="0 0 320 60" xmlns="http://www.w3.org/2000/svg" opacity="0.55">
+<div style="text-align:center; padding: 1.5rem 0 0.2rem 0;">
+  <svg width="320" height="70" viewBox="0 0 320 70" xmlns="http://www.w3.org/2000/svg" opacity="0.55">
     <!-- 左側蓮葉線條 -->
     <path d="M30,50 Q60,10 90,40" stroke="#a8c4a8" stroke-width="1.2" fill="none"/>
     <path d="M20,55 Q55,20 85,45" stroke="#c8d8c0" stroke-width="0.8" fill="none"/>
@@ -501,15 +506,6 @@ for msg in st.session_state.messages:
             show_blessing(msg["blessing"])
 
 
-# ==========================================
-# 清除對話（緊貼輸入框上方）
-# ==========================================
-col_spacer, col_btn = st.columns([5, 1])
-with col_btn:
-    if st.button("🗑️ 清除", key="clear_main"):
-        st.session_state.messages = []
-        st.session_state.pop("auto_blessing", None)
-        st.rerun()
 
 # ==========================================
 # 使用者輸入
