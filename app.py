@@ -94,8 +94,8 @@ st.markdown("""
 
     /* 主內容區 */
     .block-container {
-        padding-top: 2.5rem;
-        padding-bottom: 2rem;
+        padding-top: 1rem;
+        padding-bottom: 1.5rem;
         max-width: min(740px, 92vw);
         background: transparent !important;
     }
@@ -437,21 +437,24 @@ with st.sidebar:
 # 主頁面標題
 # ==========================================
 st.markdown("""
-<div style="text-align:center; padding: 1rem 0 0.5rem 0;">
-  <svg width="260" height="52" viewBox="0 0 260 52" xmlns="http://www.w3.org/2000/svg" opacity="0.5">
-    <path d="M20,42 Q50,8 78,34" stroke="#a8c4a8" stroke-width="1.1" fill="none"/>
-    <path d="M12,46 Q44,14 70,38" stroke="#c8d8c0" stroke-width="0.7" fill="none"/>
-    <ellipse cx="82" cy="30" rx="5" ry="8" fill="#e8c8c8" opacity="0.6" transform="rotate(-20,82,30)"/>
-    <ellipse cx="89" cy="24" rx="5" ry="8" fill="#f0d0d0" opacity="0.6" transform="rotate(10,89,24)"/>
-    <text x="130" y="30" text-anchor="middle" font-size="11" fill="#c8b8b0" letter-spacing="10">✦ ✦ ✦</text>
-    <ellipse cx="171" cy="30" rx="5" ry="8" fill="#e8c8c8" opacity="0.6" transform="rotate(20,171,30)"/>
-    <ellipse cx="178" cy="24" rx="5" ry="8" fill="#f0d0d0" opacity="0.6" transform="rotate(-10,178,24)"/>
-    <path d="M240,42 Q210,8 182,34" stroke="#a8c4a8" stroke-width="1.1" fill="none"/>
-    <path d="M248,46 Q216,14 190,38" stroke="#c8d8c0" stroke-width="0.7" fill="none"/>
-  </svg>
-  <div style="font-family:'Noto Serif TC',Georgia,serif; font-size:28px; font-weight:300; letter-spacing:0.2em; color:#4a5568; margin:0.3rem 0 0.1rem 0;">🪷 善 緣</div>
-  <div style="font-family:'Noto Serif TC',Georgia,serif; font-size:13px; color:#9aab9a; letter-spacing:0.15em; margin-bottom:0.5rem;">在這裡陪你走一段路</div>
-  <div style="height:1px; background:linear-gradient(90deg,transparent,rgba(200,216,192,0.5),transparent); margin:0 auto; width:80%;"></div>
+<div style="text-align:center; padding: 0.4rem 0 0.3rem 0;">
+  <div style="display:flex; align-items:center; justify-content:center; gap:0.6rem; margin-bottom:0.15rem;">
+    <svg width="90" height="28" viewBox="0 0 90 28" xmlns="http://www.w3.org/2000/svg" opacity="0.55">
+      <path d="M5,24 Q22,4 38,18" stroke="#a8c4a8" stroke-width="1.1" fill="none"/>
+      <path d="M0,26 Q18,6 32,20" stroke="#c8d8c0" stroke-width="0.7" fill="none"/>
+      <ellipse cx="42" cy="14" rx="4" ry="7" fill="#e8c8c8" opacity="0.65" transform="rotate(-20,42,14)"/>
+      <ellipse cx="48" cy="9" rx="4" ry="7" fill="#f0d0d0" opacity="0.6" transform="rotate(10,48,9)"/>
+    </svg>
+    <span style="font-family:'Noto Serif TC',Georgia,serif; font-size:24px; font-weight:300; letter-spacing:0.25em; color:#4a5568;">🪷 善 緣</span>
+    <svg width="90" height="28" viewBox="0 0 90 28" xmlns="http://www.w3.org/2000/svg" opacity="0.55" style="transform:scaleX(-1);">
+      <path d="M5,24 Q22,4 38,18" stroke="#a8c4a8" stroke-width="1.1" fill="none"/>
+      <path d="M0,26 Q18,6 32,20" stroke="#c8d8c0" stroke-width="0.7" fill="none"/>
+      <ellipse cx="42" cy="14" rx="4" ry="7" fill="#e8c8c8" opacity="0.65" transform="rotate(-20,42,14)"/>
+      <ellipse cx="48" cy="9" rx="4" ry="7" fill="#f0d0d0" opacity="0.6" transform="rotate(10,48,9)"/>
+    </svg>
+  </div>
+  <div style="font-family:'Noto Serif TC',Georgia,serif; font-size:12px; color:#9aab9a; letter-spacing:0.18em; margin-bottom:0.3rem;">在這裡陪你走一段路</div>
+  <div style="height:1px; background:linear-gradient(90deg,transparent,rgba(200,216,192,0.5),transparent); margin:0 auto; width:70%;"></div>
 </div>
 """, unsafe_allow_html=True)
 
