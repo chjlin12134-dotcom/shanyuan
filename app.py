@@ -178,6 +178,11 @@ with st.sidebar:
     if st.button("清除對話"):
         st.session_state.messages = []
         st.rerun()
+    st.divider()
+    st.caption(
+        "🙏 感謝佛光山人間佛教研究院\n"
+        "開放星雲大師全集，支持「善緣」專案。"
+    )
 
 # 初始化對話歷史
 if "messages" not in st.session_state:
@@ -185,9 +190,19 @@ if "messages" not in st.session_state:
     # 開場白
     st.session_state.messages.append({
         "role": "assistant",
-        "content": "嗨，我是善緣。\n\n你今天過得怎麼樣？想說什麼都可以，不想說也沒關係。",
-    })
+        "content": (
+            "我是善緣，一個在星雲大師智慧啟發下，樂於陪伴您的朋友。\n\n"
+            "我不是法師，也不是心理師。但我深受人間佛教的薰陶與培育，"
+            "學習用真誠、尊重、不評判的心來陪伴每一個人。\n\n"
+            "在我們的對話裡，我會適時就您的情形和您分享大師的智慧話語"
+            "——不是說教，只是點一盞小燈。\n\n"
+            "不論你有什麼信仰，或者沒有宗教信仰，"
+            "只要你想說說話，善緣都在這裡陪你。\n\n"
+           "我相信，經由陪伴與對話，你能找到自己的答案。"
+        ),
+    })  
 
+    
 # 顯示歷史
 for msg in st.session_state.messages:
     avatar = "🪷" if msg["role"] == "assistant" else None
