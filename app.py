@@ -286,11 +286,13 @@ st.markdown("""
 # 散落花瓣（相對於內容區定位，不用fixed）
 st.markdown("""
 <div style="pointer-events:none; position:relative; height:0; overflow:visible;">
-  <span style="position:absolute; font-size:38px; opacity:0.09; top:10px; left:-30px; transform:rotate(-15deg);">🪷</span>
-  <span style="position:absolute; font-size:22px; opacity:0.07; top:30px; right:-20px; transform:rotate(20deg);">🪷</span>
-  <span style="position:absolute; font-size:28px; opacity:0.08; top:80px; left:20px; transform:rotate(10deg);">🪷</span>
-  <span style="position:absolute; font-size:18px; opacity:0.07; top:60px; right:10px; transform:rotate(-25deg);">🪷</span>
-  <span style="position:absolute; font-size:32px; opacity:0.065; top:130px; right:-10px; transform:rotate(8deg);">🪷</span>
+  <!-- 右側 -->
+  <span style="position:absolute; font-size:38px; opacity:0.09; top:10px; right:-40px; transform:rotate(-15deg);">🪷</span>
+  <span style="position:absolute; font-size:22px; opacity:0.07; top:80px; right:-25px; transform:rotate(20deg);">🪷</span>
+  <span style="position:absolute; font-size:28px; opacity:0.08; top:150px; right:-35px; transform:rotate(8deg);">🪷</span>
+  <!-- 左側 -->
+  <span style="position:absolute; font-size:30px; opacity:0.08; top:120px; left:-40px; transform:rotate(15deg);">🪷</span>
+  <span style="position:absolute; font-size:20px; opacity:0.07; top:180px; left:-25px; transform:rotate(-20deg);">🪷</span>
 </div>
 """, unsafe_allow_html=True)
 
