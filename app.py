@@ -290,9 +290,12 @@ st.markdown("""
   <span style="position:absolute; font-size:38px; opacity:0.09; top:10px; right:-40px; transform:rotate(-15deg);">🪷</span>
   <span style="position:absolute; font-size:22px; opacity:0.07; top:80px; right:-25px; transform:rotate(20deg);">🪷</span>
   <span style="position:absolute; font-size:28px; opacity:0.08; top:150px; right:-35px; transform:rotate(8deg);">🪷</span>
-  <!-- 左側 -->
-  <span style="position:absolute; font-size:30px; opacity:0.08; top:120px; left:-40px; transform:rotate(15deg);">🪷</span>
-  <span style="position:absolute; font-size:20px; opacity:0.07; top:180px; left:-25px; transform:rotate(-20deg);">🪷</span>
+  <!-- 左側：開場白與輸入框之間 -->
+  <span style="position:absolute; font-size:32px; opacity:0.09; top:95px; left:-10px; transform:rotate(15deg);">🪷</span>
+  <span style="position:absolute; font-size:20px; opacity:0.07; top:115px; left:30px; transform:rotate(-10deg);">🪷</span>
+  <!-- 左側：輸入框下方 -->
+  <span style="position:absolute; font-size:28px; opacity:0.08; top:310px; left:-15px; transform:rotate(20deg);">🪷</span>
+  <span style="position:absolute; font-size:18px; opacity:0.07; top:345px; left:20px; transform:rotate(-15deg);">🪷</span>
 </div>
 """, unsafe_allow_html=True)
 
