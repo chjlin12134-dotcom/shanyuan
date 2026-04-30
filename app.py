@@ -132,13 +132,23 @@ st.markdown("""
         font-family: 'Noto Serif TC', serif;
         font-size: 15px;
         color: #3d3d3d;
-        min-height: 80px !important;
-        padding: 12px 16px !important;
+        min-height: 120px !important;
+        padding: 16px 20px !important;
     }
 
-    /* 輸入框外層容器加高 */
+    /* 輸入框外層容器 */
     [data-testid="stChatInput"] {
         padding-top: 0.5rem;
+    }
+
+    /* 清除按鈕對齊右下 */
+    div[data-testid="stHorizontalBlock"] .stButton > button {
+        font-size: 12px;
+        padding: 0.2rem 0.6rem;
+        background-color: #f0ebe3;
+        border-color: #d4c9b8;
+        color: #888;
+        border-radius: 16px;
     }
 
     /* Sidebar */
@@ -370,15 +380,12 @@ client = get_client()
 with st.sidebar:
     st.markdown("#### 🪷 善緣")
     st.caption(
-        "深受人間佛教薰陶的在家陪伴者。"
-        "用真誠、尊重、不評判的心，點一盞小燈，陪你走一段路。"
-        "不論有無宗教信仰，都歡迎。"
+        "我是善緣，一個深受人間佛教薰陶的在家陪伴者，"
+        "在星雲大師智慧的啟發下，學習用真誠、尊重、不評判的心陪伴每一個人。\n\n"
+        "在我們的對話裡，我會適時分享大師的智慧話語——不是說教，只是點一盞小燈。\n\n"
+        "不論你有什麼信仰，或者沒有宗教信仰，只要你想說說話，善緣都在這裡陪你。\n\n"
+        "我相信，經由陪伴與對話，你能找到自己的答案。"
     )
-    st.divider()
-    if st.button("🗑️ 清除對話"):
-        st.session_state.messages = []
-        st.session_state.pop("auto_blessing", None)
-        st.rerun()
     st.divider()
     st.markdown("🙏 **感謝佛光山人間佛教研究院**", unsafe_allow_html=False)
     st.caption("開放星雲大師全集，支持「善緣」專案。")
@@ -388,7 +395,7 @@ with st.sidebar:
 # 主頁面標題
 # ==========================================
 st.markdown("# 🪷 善緣")
-st.markdown('<p class="subtitle">在這裡陪你坐一段路</p>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle">在這裡陪你走一段路</p>', unsafe_allow_html=True)
 st.markdown("---")
 
 
@@ -417,6 +424,16 @@ for msg in st.session_state.messages:
         if msg.get("blessing"):
             show_blessing(msg["blessing"])
 
+
+# ==========================================
+# 清除對話（緊貼輸入框上方）
+# ==========================================
+col_spacer, col_btn = st.columns([5, 1])
+with col_btn:
+    if st.button("🗑️ 清除", key="clear_main"):
+        st.session_state.messages = []
+        st.session_state.pop("auto_blessing", None)
+        st.rerun()
 
 # ==========================================
 # 使用者輸入
