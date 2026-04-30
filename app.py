@@ -580,56 +580,47 @@ if (!parentDoc.getElementById('shanyuan-mic-btn')) {
       return;
     }
     const SR = window.parent.SpeechRecognition || window.parent.webkitSpeechRecognition;
-    let accumulatedText = '';
+    recognition = new SR();
+    recognition.lang = 'zh-TW';
+    recognition.continuous = false;
+    recognition.interimResults = false;
 
-    // 取得目前輸入框已有的文字作為基底
-    const initTextarea = parentDoc.querySelector('textarea[data-testid="stChatInputTextArea"]');
-    accumulatedText = initTextarea ? initTextarea.value : '';
+    recognition.onstart = () => {
+      listening = true;
+      btn.innerHTML = '⏹️';
+      btn.style.background = 'linear-gradient(135deg,#fde8e8,#f8d0d0)';
+      status.innerText = '聆聽中…';
+      status.style.display = 'block';
+    };
 
-    btn.innerHTML = '⏹️';
-    btn.style.background = 'linear-gradient(135deg,#fde8e8,#f8d0d0)';
-    status.innerText = '聆聽中… 按⏹️停止';
-    status.style.display = 'block';
+    recognition.onresult = (e) => {
+      const text = e.results[0][0].transcript;
+      const textarea = parentDoc.querySelector('textarea[data-testid="stChatInputTextArea"]');
+      if (textarea) {
+        // 累加：在現有文字後面接上新辨識的文字
+        const existing = textarea.value;
+        const newText = existing ? existing + '，' + text : text;
+        const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
+        setter.call(textarea, newText);
+        textarea.dispatchEvent(new Event('input', { bubbles: true }));
+        textarea.focus();
+      }
+      status.innerText = '✓ 再按🎙️可繼續說';
+      setTimeout(() => { status.style.display = 'none'; }, 3000);
+    };
 
-    function startOnce() {
-      if (!listening) return;
-      recognition = new SR();
-      recognition.lang = 'zh-TW';
-      recognition.continuous = false;
-      recognition.interimResults = false;
+    recognition.onerror = () => {
+      status.innerText = '辨識失敗，請再試';
+      setTimeout(() => { status.style.display = 'none'; }, 2000);
+    };
 
-      recognition.onresult = (e) => {
-        const text = e.results[0][0].transcript;
-        accumulatedText += (accumulatedText ? '，' : '') + text;
-        const textarea = parentDoc.querySelector('textarea[data-testid="stChatInputTextArea"]');
-        if (textarea) {
-          const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
-          setter.call(textarea, accumulatedText);
-          textarea.dispatchEvent(new Event('input', { bubbles: true }));
-        }
-        status.innerText = '✓ ' + accumulatedText;
-      };
+    recognition.onend = () => {
+      listening = false;
+      btn.innerHTML = '🎙️';
+      btn.style.background = 'linear-gradient(135deg,#eef4ee,#e4ede4)';
+    };
 
-      recognition.onerror = (e) => {
-        if (e.error !== 'no-speech') {
-          status.innerText = '⚠️ ' + e.error + '，繼續聆聽…';
-        }
-      };
-
-      recognition.onend = () => {
-        if (listening) {
-          setTimeout(startOnce, 200); // 自動重啟
-        } else {
-          btn.innerHTML = '🎙️';
-          btn.style.background = 'linear-gradient(135deg,#eef4ee,#e4ede4)';
-          setTimeout(() => { status.style.display = 'none'; }, 2000);
-        }
-      };
-
-      recognition.start();
-    }
-
-    startOnce();
+    recognition.start();
   });
 }
 </script>
