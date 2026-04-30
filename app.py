@@ -20,6 +20,7 @@ from pathlib import Path
 import anthropic
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 # 自動載入同資料夾的 .env（如果存在）
 try:
@@ -512,6 +513,74 @@ for msg in st.session_state.messages:
             show_blessing(msg["blessing"])
 
 
+
+# ==========================================
+# 語音輸入元件
+# ==========================================
+components.html("""
+<div style="display:flex; justify-content:flex-end; padding: 0 0 6px 0;">
+  <button id="micBtn" onclick="toggleSpeech()" title="語音輸入"
+    style="background:linear-gradient(135deg,#eef4ee,#e4ede4);
+           border:1px solid rgba(168,196,168,0.6); border-radius:50%;
+           width:42px; height:42px; cursor:pointer; font-size:20px;
+           box-shadow:0 2px 8px rgba(140,180,140,0.15);
+           display:flex; align-items:center; justify-content:center;
+           transition: all 0.2s;">🎙️</button>
+  <div id="statusMsg" style="font-size:12px; color:#9aab9a; margin-left:8px;
+       align-self:center; font-family:'Noto Serif TC',serif;"></div>
+</div>
+<script>
+let recognition = null;
+let listening = false;
+
+function toggleSpeech() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    document.getElementById('statusMsg').innerText = '您的瀏覽器不支援語音輸入，請用 Chrome';
+    return;
+  }
+  if (listening) {
+    recognition.stop();
+    return;
+  }
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.lang = 'zh-TW';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  recognition.onstart = () => {
+    listening = true;
+    document.getElementById('micBtn').innerText = '⏹️';
+    document.getElementById('micBtn').style.background = 'linear-gradient(135deg,#fde8e8,#f8d0d0)';
+    document.getElementById('statusMsg').innerText = '聆聽中…';
+  };
+
+  recognition.onresult = (e) => {
+    const text = e.results[0][0].transcript;
+    const textarea = window.parent.document.querySelector('textarea[data-testid="stChatInputTextArea"]');
+    if (textarea) {
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
+      nativeInputValueSetter.call(textarea, text);
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      textarea.focus();
+    }
+    document.getElementById('statusMsg').innerText = '✓ ' + text;
+  };
+
+  recognition.onerror = (e) => {
+    document.getElementById('statusMsg').innerText = '辨識失敗，請再試一次';
+  };
+
+  recognition.onend = () => {
+    listening = false;
+    document.getElementById('micBtn').innerText = '🎙️';
+    document.getElementById('micBtn').style.background = 'linear-gradient(135deg,#eef4ee,#e4ede4)';
+  };
+
+  recognition.start();
+}
+</script>
+""", height=55)
 
 # ==========================================
 # 使用者輸入
