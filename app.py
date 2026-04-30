@@ -534,6 +534,7 @@ with st.expander("🎙️ 語音輸入", expanded=False):
                         timeout=30,
                     )
                     result = response.json()
+                    st.write("DEBUG:", result)  # 暫時顯示原始回傳
                     transcript = result.get("text", "")
                     if transcript:
                         st.success(f"✓ {transcript}")
