@@ -448,8 +448,29 @@ with st.sidebar:
 # ==========================================
 # 主頁面標題
 # ==========================================
-st.markdown('<div class="deco-line">✦ &nbsp; &nbsp; ✦ &nbsp; &nbsp; ✦</div>', unsafe_allow_html=True)
-st.markdown("# 🪷 善緣")
+st.markdown("""
+<div style="text-align:center; padding: 0.5rem 0 0.2rem 0;">
+  <svg width="320" height="60" viewBox="0 0 320 60" xmlns="http://www.w3.org/2000/svg" opacity="0.55">
+    <!-- 左側蓮葉線條 -->
+    <path d="M30,50 Q60,10 90,40" stroke="#a8c4a8" stroke-width="1.2" fill="none"/>
+    <path d="M20,55 Q55,20 85,45" stroke="#c8d8c0" stroke-width="0.8" fill="none"/>
+    <!-- 左花 -->
+    <ellipse cx="95" cy="38" rx="6" ry="10" fill="#e8c8c8" opacity="0.6" transform="rotate(-20,95,38)"/>
+    <ellipse cx="103" cy="32" rx="6" ry="10" fill="#f0d0d0" opacity="0.6" transform="rotate(10,103,32)"/>
+    <ellipse cx="99" cy="28" rx="5" ry="9" fill="#e8c0c0" opacity="0.5" transform="rotate(-5,99,28)"/>
+    <!-- 中間裝飾點 -->
+    <text x="160" y="38" text-anchor="middle" font-size="13" fill="#c8d8c0" letter-spacing="12">✦ ✦ ✦</text>
+    <!-- 右花 -->
+    <ellipse cx="217" cy="38" rx="6" ry="10" fill="#e8c8c8" opacity="0.6" transform="rotate(20,217,38)"/>
+    <ellipse cx="209" cy="32" rx="6" ry="10" fill="#f0d0d0" opacity="0.6" transform="rotate(-10,209,32)"/>
+    <ellipse cx="213" cy="28" rx="5" ry="9" fill="#e8c0c0" opacity="0.5" transform="rotate(5,213,28)"/>
+    <!-- 右側蓮葉線條 -->
+    <path d="M290,50 Q260,10 230,40" stroke="#a8c4a8" stroke-width="1.2" fill="none"/>
+    <path d="M300,55 Q265,20 235,45" stroke="#c8d8c0" stroke-width="0.8" fill="none"/>
+  </svg>
+</div>
+""", unsafe_allow_html=True)
+st.markdown("# 🪷 善 緣")
 st.markdown('<p class="subtitle">在這裡陪你走一段路</p>', unsafe_allow_html=True)
 st.markdown('<div class="top-banner"></div>', unsafe_allow_html=True)
 
