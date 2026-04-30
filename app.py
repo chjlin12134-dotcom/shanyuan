@@ -63,9 +63,13 @@ st.markdown("""
         font-family: 'Noto Serif TC', 'Georgia', serif;
     }
 
-    /* 頁面背景：柔和米白漸層 */
+    /* 頁面背景：蓮花水印襯底 */
     .stApp {
-        background: linear-gradient(160deg, #fdf8f0 0%, #f5f0e8 40%, #eef4ee 100%) !important;
+        background-color: #fdf8f0 !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700' viewBox='0 0 700 700'%3E%3Cg transform='translate(350,380)' opacity='0.07'%3E%3C!-- 外層花瓣 8片 --%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23c8a0a0' transform='rotate(0)'/%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23c8a0a0' transform='rotate(45)'/%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23c8a0a0' transform='rotate(90)'/%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23c8a0a0' transform='rotate(135)'/%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23c8a0a0' transform='rotate(180)'/%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23c8a0a0' transform='rotate(225)'/%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23c8a0a0' transform='rotate(270)'/%3E%3Cellipse cx='0' cy='-180' rx='45' ry='100' fill='%23c8a0a0' transform='rotate(315)'/%3E%3C!-- 中層花瓣 8片 --%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23d4b0b0' transform='rotate(22.5)'/%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23d4b0b0' transform='rotate(67.5)'/%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23d4b0b0' transform='rotate(112.5)'/%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23d4b0b0' transform='rotate(157.5)'/%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23d4b0b0' transform='rotate(202.5)'/%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23d4b0b0' transform='rotate(247.5)'/%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23d4b0b0' transform='rotate(292.5)'/%3E%3Cellipse cx='0' cy='-120' rx='35' ry='80' fill='%23d4b0b0' transform='rotate(337.5)'/%3E%3C!-- 內層花瓣 6片 --%3E%3Cellipse cx='0' cy='-70' rx='25' ry='55' fill='%23e0c0c0' transform='rotate(0)'/%3E%3Cellipse cx='0' cy='-70' rx='25' ry='55' fill='%23e0c0c0' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='-70' rx='25' ry='55' fill='%23e0c0c0' transform='rotate(120)'/%3E%3Cellipse cx='0' cy='-70' rx='25' ry='55' fill='%23e0c0c0' transform='rotate(180)'/%3E%3Cellipse cx='0' cy='-70' rx='25' ry='55' fill='%23e0c0c0' transform='rotate(240)'/%3E%3Cellipse cx='0' cy='-70' rx='25' ry='55' fill='%23e0c0c0' transform='rotate(300)'/%3E%3C!-- 花心 --%3E%3Ccircle cx='0' cy='0' r='30' fill='%23e8d080' opacity='0.6'/%3E%3Ccircle cx='0' cy='0' r='18' fill='%23f0e090' opacity='0.5'/%3E%3C!-- 蓮葉 --%3E%3Cellipse cx='-220' cy='80' rx='120' ry='60' fill='%23a0c0a0' transform='rotate(-15,-220,80)'/%3E%3Cellipse cx='230' cy='100' rx='100' ry='50' fill='%23a0c0a0' transform='rotate(10,230,100)'/%3E%3C!-- 蓮梗 --%3E%3Cline x1='0' y1='0' x2='-220' y2='80' stroke='%23a0c0a0' stroke-width='4'/%3E%3Cline x1='0' y1='0' x2='230' y2='100' stroke='%23a0c0a0' stroke-width='3'/%3E%3C/g%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 80%;
         min-height: 100vh;
     }
 
@@ -75,8 +79,7 @@ st.markdown("""
     }
 
     [data-testid="stHeader"] {
-        background: rgba(253,248,240,0.8) !important;
-        backdrop-filter: blur(8px);
+        background: rgba(253,248,240,0.85) !important;
     }
 
     /* 主內容區 */
