@@ -453,12 +453,14 @@ if user_input := st.chat_input("想說什麼？"):
     retrieved = retrieve(corpus, recent_text)
     retrieval_block = format_retrieved(retrieved)
 
-    # 道別時加入給善緣的提示，讓回應自然溫暖地收尾
+    # 道別時加入給善緣的提示，讓回應自然溫暖地收尾，並預告祈福禮
     farewell_instruction = ""
     if farewell:
         farewell_instruction = (
             "\n\n---\n【本輪提示】使用者正在道別。"
-            "請用溫暖自然的語氣與他們道別，簡短真誠，像朋友分別時說的最後一句話。\n"
+            "請用溫暖自然的語氣與他們道別，簡短真誠，像朋友分別時說的最後一句話。"
+            "在回應的最後，請自然地加上類似這樣的一句話（可以用自己的語氣說）："
+            "「離開前，我會送你一句大師的話，帶著走。」\n"
         )
 
     full_system = system_prompt + retrieval_block + farewell_instruction
