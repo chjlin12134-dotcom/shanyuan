@@ -580,56 +580,56 @@ if (!parentDoc.getElementById('shanyuan-mic-btn')) {
       return;
     }
     const SR = window.parent.SpeechRecognition || window.parent.webkitSpeechRecognition;
-    recognition = new SR();
-    recognition.lang = 'zh-TW';
-    recognition.continuous = true;
-    recognition.interimResults = true;
     let accumulatedText = '';
 
-    recognition.onstart = () => {
-      listening = true;
-      // 取得目前輸入框已有的文字作為基底
-      const textarea = parentDoc.querySelector('textarea[data-testid="stChatInputTextArea"]');
-      accumulatedText = textarea ? textarea.value : '';
-      btn.innerHTML = '⏹️';
-      btn.style.background = 'linear-gradient(135deg,#fde8e8,#f8d0d0)';
-      status.innerText = '聆聽中… 說完按⏹️停止';
-      status.style.display = 'block';
-    };
+    // 取得目前輸入框已有的文字作為基底
+    const initTextarea = parentDoc.querySelector('textarea[data-testid="stChatInputTextArea"]');
+    accumulatedText = initTextarea ? initTextarea.value : '';
 
-    recognition.onresult = (e) => {
-      let interim = '';
-      let final = '';
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        if (e.results[i].isFinal) {
-          final += e.results[i][0].transcript;
-        } else {
-          interim += e.results[i][0].transcript;
+    btn.innerHTML = '⏹️';
+    btn.style.background = 'linear-gradient(135deg,#fde8e8,#f8d0d0)';
+    status.innerText = '聆聽中… 按⏹️停止';
+    status.style.display = 'block';
+
+    function startOnce() {
+      if (!listening) return;
+      recognition = new SR();
+      recognition.lang = 'zh-TW';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onresult = (e) => {
+        const text = e.results[0][0].transcript;
+        accumulatedText += (accumulatedText ? '，' : '') + text;
+        const textarea = parentDoc.querySelector('textarea[data-testid="stChatInputTextArea"]');
+        if (textarea) {
+          const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
+          setter.call(textarea, accumulatedText);
+          textarea.dispatchEvent(new Event('input', { bubbles: true }));
         }
-      }
-      if (final) accumulatedText += final;
-      const displayText = accumulatedText + interim;
-      const textarea = parentDoc.querySelector('textarea[data-testid="stChatInputTextArea"]');
-      if (textarea) {
-        const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
-        setter.call(textarea, displayText);
-        textarea.dispatchEvent(new Event('input', { bubbles: true }));
-      }
-      status.innerText = interim ? '🎙 ' + interim : '✓ 繼續說或按⏹️送出';
-    };
+        status.innerText = '✓ ' + accumulatedText;
+      };
 
-    recognition.onerror = () => {
-      status.innerText = '辨識失敗，請再試';
-      setTimeout(() => { status.style.display = 'none'; }, 2000);
-    };
+      recognition.onerror = (e) => {
+        if (e.error !== 'no-speech') {
+          status.innerText = '⚠️ ' + e.error + '，繼續聆聽…';
+        }
+      };
 
-    recognition.onend = () => {
-      listening = false;
-      btn.innerHTML = '🎙️';
-      btn.style.background = 'linear-gradient(135deg,#eef4ee,#e4ede4)';
-    };
+      recognition.onend = () => {
+        if (listening) {
+          setTimeout(startOnce, 200); // 自動重啟
+        } else {
+          btn.innerHTML = '🎙️';
+          btn.style.background = 'linear-gradient(135deg,#eef4ee,#e4ede4)';
+          setTimeout(() => { status.style.display = 'none'; }, 2000);
+        }
+      };
 
-    recognition.start();
+      recognition.start();
+    }
+
+    startOnce();
   });
 }
 </script>
