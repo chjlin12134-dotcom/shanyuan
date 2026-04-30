@@ -100,36 +100,6 @@ st.markdown("""
         background: transparent !important;
     }
 
-    /* 標題 */
-    h1 {
-        font-weight: 300;
-        letter-spacing: 0.15em;
-        color: #4a5568;
-        font-size: 2.2rem !important;
-        text-shadow: 0 1px 3px rgba(180,160,140,0.15);
-    }
-
-    /* 副標題 */
-    .subtitle {
-        color: #9aab9a;
-        font-size: 14px;
-        margin-top: -8px;
-        letter-spacing: 0.12em;
-    }
-
-    /* 頂部裝飾橫幅 */
-    .top-banner {
-        background: linear-gradient(90deg,
-            transparent 0%,
-            rgba(200,216,192,0.3) 20%,
-            rgba(200,216,192,0.5) 50%,
-            rgba(200,216,192,0.3) 80%,
-            transparent 100%);
-        height: 2px;
-        border-radius: 2px;
-        margin: 0.5rem 0 1.5rem 0;
-    }
-
     /* 標題裝飾文字 */
     .deco-line {
         text-align: center;
@@ -467,30 +437,23 @@ with st.sidebar:
 # 主頁面標題
 # ==========================================
 st.markdown("""
-<div style="text-align:center; padding: 1.5rem 0 0.2rem 0;">
-  <svg width="320" height="70" viewBox="0 0 320 70" xmlns="http://www.w3.org/2000/svg" opacity="0.55">
-    <!-- 左側蓮葉線條 -->
-    <path d="M30,50 Q60,10 90,40" stroke="#a8c4a8" stroke-width="1.2" fill="none"/>
-    <path d="M20,55 Q55,20 85,45" stroke="#c8d8c0" stroke-width="0.8" fill="none"/>
-    <!-- 左花 -->
-    <ellipse cx="95" cy="38" rx="6" ry="10" fill="#e8c8c8" opacity="0.6" transform="rotate(-20,95,38)"/>
-    <ellipse cx="103" cy="32" rx="6" ry="10" fill="#f0d0d0" opacity="0.6" transform="rotate(10,103,32)"/>
-    <ellipse cx="99" cy="28" rx="5" ry="9" fill="#e8c0c0" opacity="0.5" transform="rotate(-5,99,28)"/>
-    <!-- 中間裝飾點 -->
-    <text x="160" y="38" text-anchor="middle" font-size="13" fill="#c8d8c0" letter-spacing="12">✦ ✦ ✦</text>
-    <!-- 右花 -->
-    <ellipse cx="217" cy="38" rx="6" ry="10" fill="#e8c8c8" opacity="0.6" transform="rotate(20,217,38)"/>
-    <ellipse cx="209" cy="32" rx="6" ry="10" fill="#f0d0d0" opacity="0.6" transform="rotate(-10,209,32)"/>
-    <ellipse cx="213" cy="28" rx="5" ry="9" fill="#e8c0c0" opacity="0.5" transform="rotate(5,213,28)"/>
-    <!-- 右側蓮葉線條 -->
-    <path d="M290,50 Q260,10 230,40" stroke="#a8c4a8" stroke-width="1.2" fill="none"/>
-    <path d="M300,55 Q265,20 235,45" stroke="#c8d8c0" stroke-width="0.8" fill="none"/>
+<div style="text-align:center; padding: 1rem 0 0.5rem 0;">
+  <svg width="260" height="52" viewBox="0 0 260 52" xmlns="http://www.w3.org/2000/svg" opacity="0.5">
+    <path d="M20,42 Q50,8 78,34" stroke="#a8c4a8" stroke-width="1.1" fill="none"/>
+    <path d="M12,46 Q44,14 70,38" stroke="#c8d8c0" stroke-width="0.7" fill="none"/>
+    <ellipse cx="82" cy="30" rx="5" ry="8" fill="#e8c8c8" opacity="0.6" transform="rotate(-20,82,30)"/>
+    <ellipse cx="89" cy="24" rx="5" ry="8" fill="#f0d0d0" opacity="0.6" transform="rotate(10,89,24)"/>
+    <text x="130" y="30" text-anchor="middle" font-size="11" fill="#c8b8b0" letter-spacing="10">✦ ✦ ✦</text>
+    <ellipse cx="171" cy="30" rx="5" ry="8" fill="#e8c8c8" opacity="0.6" transform="rotate(20,171,30)"/>
+    <ellipse cx="178" cy="24" rx="5" ry="8" fill="#f0d0d0" opacity="0.6" transform="rotate(-10,178,24)"/>
+    <path d="M240,42 Q210,8 182,34" stroke="#a8c4a8" stroke-width="1.1" fill="none"/>
+    <path d="M248,46 Q216,14 190,38" stroke="#c8d8c0" stroke-width="0.7" fill="none"/>
   </svg>
+  <div style="font-family:'Noto Serif TC',Georgia,serif; font-size:28px; font-weight:300; letter-spacing:0.2em; color:#4a5568; margin:0.3rem 0 0.1rem 0;">🪷 善 緣</div>
+  <div style="font-family:'Noto Serif TC',Georgia,serif; font-size:13px; color:#9aab9a; letter-spacing:0.15em; margin-bottom:0.5rem;">在這裡陪你走一段路</div>
+  <div style="height:1px; background:linear-gradient(90deg,transparent,rgba(200,216,192,0.5),transparent); margin:0 auto; width:80%;"></div>
 </div>
 """, unsafe_allow_html=True)
-st.markdown("# 🪷 善 緣")
-st.markdown('<p class="subtitle">在這裡陪你走一段路</p>', unsafe_allow_html=True)
-st.markdown('<div class="top-banner"></div>', unsafe_allow_html=True)
 
 
 # ==========================================
