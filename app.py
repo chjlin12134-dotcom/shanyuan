@@ -533,7 +533,7 @@ if (!parentDoc.getElementById('shanyuan-mic-btn')) {
   btn.innerHTML = '🎙️';
   btn.style.cssText = `
     position: fixed;
-    bottom: 130px;
+    bottom: 220px;
     right: 24px;
     width: 46px;
     height: 46px;
@@ -554,7 +554,7 @@ if (!parentDoc.getElementById('shanyuan-mic-btn')) {
   status.id = 'shanyuan-mic-status';
   status.style.cssText = `
     position: fixed;
-    bottom: 108px;
+    bottom: 200px;
     right: 74px;
     font-size: 12px;
     color: #9aab9a;
@@ -582,28 +582,40 @@ if (!parentDoc.getElementById('shanyuan-mic-btn')) {
     const SR = window.parent.SpeechRecognition || window.parent.webkitSpeechRecognition;
     recognition = new SR();
     recognition.lang = 'zh-TW';
-    recognition.continuous = false;
-    recognition.interimResults = false;
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    let accumulatedText = '';
 
     recognition.onstart = () => {
       listening = true;
+      // 取得目前輸入框已有的文字作為基底
+      const textarea = parentDoc.querySelector('textarea[data-testid="stChatInputTextArea"]');
+      accumulatedText = textarea ? textarea.value : '';
       btn.innerHTML = '⏹️';
       btn.style.background = 'linear-gradient(135deg,#fde8e8,#f8d0d0)';
-      status.innerText = '聆聽中…';
+      status.innerText = '聆聽中… 說完按⏹️停止';
       status.style.display = 'block';
     };
 
     recognition.onresult = (e) => {
-      const text = e.results[0][0].transcript;
+      let interim = '';
+      let final = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) {
+          final += e.results[i][0].transcript;
+        } else {
+          interim += e.results[i][0].transcript;
+        }
+      }
+      if (final) accumulatedText += final;
+      const displayText = accumulatedText + interim;
       const textarea = parentDoc.querySelector('textarea[data-testid="stChatInputTextArea"]');
       if (textarea) {
         const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
-        setter.call(textarea, text);
+        setter.call(textarea, displayText);
         textarea.dispatchEvent(new Event('input', { bubbles: true }));
-        textarea.focus();
       }
-      status.innerText = '✓ ' + text;
-      setTimeout(() => { status.style.display = 'none'; }, 3000);
+      status.innerText = interim ? '🎙 ' + interim : '✓ 繼續說或按⏹️送出';
     };
 
     recognition.onerror = () => {
