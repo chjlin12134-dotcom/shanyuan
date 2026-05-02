@@ -283,14 +283,15 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 散落花瓣（相對於內容區定位，不用fixed）
+# 散落花瓣（fixed 固定在畫面，不跟著對話滾動）
 st.markdown("""
-<div style="pointer-events:none; position:relative; height:0; overflow:visible;">
-  <span style="position:absolute; font-size:38px; opacity:0.09; top:10px; left:10px; transform:rotate(-15deg);">🪷</span>
-  <span style="position:absolute; font-size:22px; opacity:0.07; top:30px; right:-20px; transform:rotate(20deg);">🪷</span>
-  <span style="position:absolute; font-size:28px; opacity:0.08; top:80px; left:20px; transform:rotate(10deg);">🪷</span>
-  <span style="position:absolute; font-size:18px; opacity:0.07; top:60px; right:10px; transform:rotate(-25deg);">🪷</span>
-  <span style="position:absolute; font-size:32px; opacity:0.065; top:130px; right:-10px; transform:rotate(8deg);">🪷</span>
+<div style="pointer-events:none;">
+  <span style="position:fixed; font-size:38px; opacity:0.09; top:12vh; left:2vw; transform:rotate(-15deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:22px; opacity:0.07; top:22vh; right:3vw; transform:rotate(20deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:28px; opacity:0.08; top:45vh; left:1.5vw; transform:rotate(10deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:18px; opacity:0.07; top:38vh; right:2vw; transform:rotate(-25deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:32px; opacity:0.065; top:68vh; right:1.5vw; transform:rotate(8deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:20px; opacity:0.06; bottom:15vh; left:3vw; transform:rotate(30deg); z-index:0;">🪷</span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -546,21 +547,11 @@ user_input = voice_text or st.chat_input("想說什麼？")
 st.markdown("<div style='height:0.5rem;'></div>", unsafe_allow_html=True)
 col_left, col_voice, col_right = st.columns([2, 3, 2])
 with col_voice:
-    lang_col1, lang_col2 = st.columns(2)
-    with lang_col1:
-        lang_trad = st.button("🎙️ 繁體語音", key="btn_trad", use_container_width=True)
-    with lang_col2:
-        lang_simp = st.button("🎙️ 简体语音", key="btn_simp", use_container_width=True)
+    voice_btn = st.button("🎙️ 語音輸入", key="btn_voice", use_container_width=True)
 
-    if lang_trad or lang_simp or st.session_state.get("show_audio_input"):
+    if voice_btn or st.session_state.get("show_audio_input"):
         st.session_state["show_audio_input"] = True
-        prompt_hint = "以下是繁體中文語音內容：" if (lang_trad or not lang_simp) else "以下是简体中文语音内容："
-        if lang_simp:
-            st.session_state["audio_lang"] = "simp"
-        elif lang_trad:
-            st.session_state["audio_lang"] = "trad"
-        saved_lang = st.session_state.get("audio_lang", "trad")
-        prompt_hint = "以下是繁體中文語音內容：" if saved_lang == "trad" else "以下是简体中文语音内容："
+        prompt_hint = "以下是中文語音內容："
 
         audio = st.audio_input("🎤 按下錄音，說完再按停止", key="audio_recorder", label_visibility="collapsed")
         if audio is not None:
