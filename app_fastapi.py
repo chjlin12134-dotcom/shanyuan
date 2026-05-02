@@ -202,8 +202,9 @@ async def chat(request: Request):
     if farewell:
         farewell_instruction = (
             "\n\n---\n【本輪提示】使用者正在道別。"
-            "請用溫暖自然的語氣道別，簡短真誠。"
-            "在回應的最後自然加上：「離開前，我會送你一句大師的話，帶著走。」\n"
+            "請用溫暖自然的語氣道別，以這句話結尾（可依語氣微調，但意思不變）："
+            "「再見，在你離開前，我會為你選一句和你有關的大師的話，讓你帶著走，為你祈福。」"
+            "說完這句就結束，不要再加其他話，系統會自動送上祈福禮。\n"
         )
 
     full_system = SYSTEM_PROMPT + retrieval_block + farewell_instruction
