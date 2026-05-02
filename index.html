@@ -577,37 +577,37 @@ textarea#text-input::placeholder { color: #b0a088; }
 
   <!-- 第三株：高位蓮蓬（左側偏上，填補語音bar旁空白） -->
   <!-- 蓮蓬莖，從底部延伸較高 -->
-  <path d="M 310 580 C 309 548 306 510 300 472 C 295 442 290 418 292 390"
+  <path d="M 248 580 C 247 548 244 510 238 472 C 233 442 228 418 230 390"
     stroke="#3a4830" stroke-width="2.0" fill="none" stroke-linecap="round"
     opacity="0.40" filter="url(#inkf)"/>
   <!-- 蓮蓬頭 -->
   <g filter="url(#inkf2)" opacity="0.72">
     <!-- 蓮蓬主體（橢圓形，帶紋路） -->
-    <ellipse cx="292" cy="375" rx="22" ry="18"
+    <ellipse cx="230" cy="375" rx="22" ry="18"
       fill="#7a8858" fill-opacity="0.55"/>
-    <ellipse cx="292" cy="372" rx="20" ry="16"
+    <ellipse cx="230" cy="372" rx="20" ry="16"
       fill="#8a9868" fill-opacity="0.45"/>
     <!-- 蓮蓬頂面凹點（蓮子孔） -->
-    <circle cx="286" cy="368" r="3.2" fill="#3a4828" fill-opacity="0.50"/>
-    <circle cx="295" cy="366" r="3.0" fill="#3a4828" fill-opacity="0.48"/>
-    <circle cx="302" cy="370" r="2.8" fill="#3a4828" fill-opacity="0.45"/>
-    <circle cx="283" cy="374" r="2.6" fill="#3a4828" fill-opacity="0.42"/>
-    <circle cx="292" cy="374" r="2.8" fill="#3a4828" fill-opacity="0.45"/>
-    <circle cx="300" cy="376" r="2.5" fill="#3a4828" fill-opacity="0.40"/>
+    <circle cx="224" cy="368" r="3.2" fill="#3a4828" fill-opacity="0.50"/>
+    <circle cx="233" cy="366" r="3.0" fill="#3a4828" fill-opacity="0.48"/>
+    <circle cx="240" cy="370" r="2.8" fill="#3a4828" fill-opacity="0.45"/>
+    <circle cx="221" cy="374" r="2.6" fill="#3a4828" fill-opacity="0.42"/>
+    <circle cx="230" cy="374" r="2.8" fill="#3a4828" fill-opacity="0.45"/>
+    <circle cx="238" cy="376" r="2.5" fill="#3a4828" fill-opacity="0.40"/>
     <!-- 蓮蓬托葉（萼片） -->
-    <path d="M 270 380 C 274 372 280 375 292 378 C 304 375 310 372 314 380 C 308 385 298 388 292 388 C 286 388 276 385 270 380 Z"
+    <path d="M 208 380 C 212 372 218 375 230 378 C 242 375 248 372 252 380 C 246 385 236 388 230 388 C 224 388 214 385 208 380 Z"
       fill="#4a6038" fill-opacity="0.48"/>
   </g>
   <!-- 蓮蓬旁一片小立葉 -->
   <g filter="url(#wash)" opacity="0.35">
-    <ellipse cx="268" cy="430" rx="38" ry="28"
-      fill="url(#gl2)" transform="rotate(20,268,430)"/>
+    <ellipse cx="206" cy="430" rx="38" ry="28"
+      fill="url(#gl2)" transform="rotate(20,206,430)"/>
   </g>
   <g filter="url(#inkf2)" opacity="0.38">
-    <path d="M 268 402 C 267 415 267 424 268 430"
+    <path d="M 206 402 C 205 415 205 424 206 430"
       stroke="#2a3820" stroke-width="0.8" fill="none"/>
-    <path d="M 268 416 C 250 418 235 422 224 426" stroke="#2a3820" stroke-width="0.6" fill="none" opacity="0.48"/>
-    <path d="M 268 416 C 285 413 300 410 312 407" stroke="#2a3820" stroke-width="0.6" fill="none" opacity="0.48"/>
+    <path d="M 206 416 C 188 418 173 422 162 426" stroke="#2a3820" stroke-width="0.6" fill="none" opacity="0.48"/>
+    <path d="M 206 416 C 223 413 238 410 250 407" stroke="#2a3820" stroke-width="0.6" fill="none" opacity="0.48"/>
   </g>
 
   <!-- 蓮藕（水下隱約可見，偏墨） -->
@@ -873,6 +873,7 @@ textarea#text-input::placeholder { color: #b0a088; }
 <script>
 let messages = [];
 let isStreaming = false;
+let blessingGiven = false;  // 祈福禮只送一次
 
 window.addEventListener('DOMContentLoaded', () => {
   addMessage('assistant', '嗨，我是善緣。你今天過得怎麼樣？');
@@ -1008,7 +1009,10 @@ async function sendMessage(userText) {
             contentSpan.textContent = fullText;
             scrollToBottom();
           } else if (data.type === 'blessing') {
-            addBlessing(data.quote, data.title, data.book);
+            if (!blessingGiven) {
+              blessingGiven = true;
+              addBlessing(data.quote, data.title, data.book);
+            }
           } else if (data.type === 'done') {
             messages.push({ role: 'assistant', content: data.full });
           } else if (data.type === 'error') {
