@@ -467,7 +467,21 @@ textarea#text-input::placeholder { color: #b0a088; }
   .msg { max-width: 90%; font-size: 15px; }
   .btn-info { display: none; }
   .info-bar { display: none; }
-  #lotus-bg { width: 280px; height: 340px; opacity: 0.7; }
+  /* 手機版：荷花背景全寬，保留右側荷花與左側蓮蓬 */
+  #lotus-bg {
+    width: 100%;
+    height: 320px;
+    opacity: 0.75;
+    left: 0;
+  }
+  /* 手機版輸入區微調 */
+  footer { padding: 8px 10px 12px; }
+  .input-row { gap: 8px; }
+  textarea#text-input { font-size: 16px; padding: 10px 12px; }
+  .icon-btn { width: 44px; height: 44px; }
+  /* 手機版祈福禮卡片 */
+  .blessing { width: 98%; padding: 18px 16px; }
+  .blessing-quote { font-size: 14px; }
 }
 </style>
 </head>
@@ -873,7 +887,7 @@ textarea#text-input::placeholder { color: #b0a088; }
 <script>
 let messages = [];
 let isStreaming = false;
-let blessingGiven = false;  // 祈福禮只送一次
+let blessingGiven = sessionStorage.getItem('blessingGiven') === '1';  // 祈福禮只送一次（跨重整保留）
 
 window.addEventListener('DOMContentLoaded', () => {
   addMessage('assistant', '嗨，我是善緣。你今天過得怎麼樣？');
@@ -1011,6 +1025,7 @@ async function sendMessage(userText) {
           } else if (data.type === 'blessing') {
             if (!blessingGiven) {
               blessingGiven = true;
+              sessionStorage.setItem('blessingGiven', '1');
               addBlessing(data.quote, data.title, data.book);
             }
           } else if (data.type === 'done') {
