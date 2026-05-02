@@ -235,6 +235,45 @@ header {
   40% { transform:translateY(-6px); opacity:1; }
 }
 
+/* 祈福禮——拆禮物按鈕 */
+.blessing-btn-wrap {
+  align-self: center;
+  text-align: center;
+  margin: 8px 0;
+}
+.btn-open-blessing {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 14px;
+  color: #6a5030;
+  background: linear-gradient(160deg, rgba(252,244,228,0.96), rgba(244,232,210,0.94));
+  border: 1px solid rgba(170,140,90,0.55);
+  border-radius: 4px;
+  padding: 12px 28px;
+  cursor: pointer;
+  letter-spacing: 0.12em;
+  box-shadow: 0 2px 12px rgba(140,100,50,0.12);
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-open-blessing::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 40%, rgba(255,240,200,0.4) 50%, transparent 60%);
+  transform: translateX(-100%);
+  animation: shimmer 2.4s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  60%,100% { transform: translateX(200%); }
+}
+.btn-open-blessing:hover {
+  background: linear-gradient(160deg, rgba(252,244,220,1), rgba(240,226,198,0.98));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px rgba(140,100,50,0.18);
+}
+
 /* 祈福禮——捲軸感卡片 */
 .blessing {
   align-self: center;
@@ -250,6 +289,14 @@ header {
   text-align: center;
   box-shadow: 0 4px 24px rgba(100,80,50,0.1), 0 1px 4px rgba(100,80,50,0.06);
   position: relative;
+  /* 展開動畫 */
+  animation: unfold 0.7s cubic-bezier(0.22,1,0.36,1) both;
+  transform-origin: top center;
+}
+@keyframes unfold {
+  0%   { opacity: 0; transform: scaleY(0.05) translateY(-10px); }
+  40%  { opacity: 0.6; }
+  100% { opacity: 1; transform: scaleY(1) translateY(0); }
 }
 .blessing::before, .blessing::after {
   content: "❧";
@@ -527,6 +574,41 @@ textarea#text-input::placeholder { color: #b0a088; }
   <path d="M 205 580 C 204 568 204 556 205 548"
     stroke="#3a4830" stroke-width="1.7" fill="none" stroke-linecap="round"
     opacity="0.35" filter="url(#inkf)"/>
+
+  <!-- 第三株：高位蓮蓬（左側偏上，填補語音bar旁空白） -->
+  <!-- 蓮蓬莖，從底部延伸較高 -->
+  <path d="M 310 580 C 309 548 306 510 300 472 C 295 442 290 418 292 390"
+    stroke="#3a4830" stroke-width="2.0" fill="none" stroke-linecap="round"
+    opacity="0.40" filter="url(#inkf)"/>
+  <!-- 蓮蓬頭 -->
+  <g filter="url(#inkf2)" opacity="0.72">
+    <!-- 蓮蓬主體（橢圓形，帶紋路） -->
+    <ellipse cx="292" cy="375" rx="22" ry="18"
+      fill="#7a8858" fill-opacity="0.55"/>
+    <ellipse cx="292" cy="372" rx="20" ry="16"
+      fill="#8a9868" fill-opacity="0.45"/>
+    <!-- 蓮蓬頂面凹點（蓮子孔） -->
+    <circle cx="286" cy="368" r="3.2" fill="#3a4828" fill-opacity="0.50"/>
+    <circle cx="295" cy="366" r="3.0" fill="#3a4828" fill-opacity="0.48"/>
+    <circle cx="302" cy="370" r="2.8" fill="#3a4828" fill-opacity="0.45"/>
+    <circle cx="283" cy="374" r="2.6" fill="#3a4828" fill-opacity="0.42"/>
+    <circle cx="292" cy="374" r="2.8" fill="#3a4828" fill-opacity="0.45"/>
+    <circle cx="300" cy="376" r="2.5" fill="#3a4828" fill-opacity="0.40"/>
+    <!-- 蓮蓬托葉（萼片） -->
+    <path d="M 270 380 C 274 372 280 375 292 378 C 304 375 310 372 314 380 C 308 385 298 388 292 388 C 286 388 276 385 270 380 Z"
+      fill="#4a6038" fill-opacity="0.48"/>
+  </g>
+  <!-- 蓮蓬旁一片小立葉 -->
+  <g filter="url(#wash)" opacity="0.35">
+    <ellipse cx="268" cy="430" rx="38" ry="28"
+      fill="url(#gl2)" transform="rotate(20,268,430)"/>
+  </g>
+  <g filter="url(#inkf2)" opacity="0.38">
+    <path d="M 268 402 C 267 415 267 424 268 430"
+      stroke="#2a3820" stroke-width="0.8" fill="none"/>
+    <path d="M 268 416 C 250 418 235 422 224 426" stroke="#2a3820" stroke-width="0.6" fill="none" opacity="0.48"/>
+    <path d="M 268 416 C 285 413 300 410 312 407" stroke="#2a3820" stroke-width="0.6" fill="none" opacity="0.48"/>
+  </g>
 
   <!-- 蓮藕（水下隱約可見，偏墨） -->
   <g opacity="0.42" filter="url(#inkf)">
@@ -841,17 +923,32 @@ function removeTyping() {
 
 function addBlessing(quote, title, book) {
   const inner = getChatInner();
-  const div = document.createElement('div');
-  div.className = 'blessing';
-  const source = title ? `——〈${title}〉${book ? '《' + book + '》' : ''}` : '';
-  div.innerHTML = `
-    <span class="blessing-icon">🪷</span>
-    <div class="blessing-label">✦ 善緣的祈福禮 ✦</div>
-    <div class="blessing-quote">「${quote}」</div>
-    ${source ? `<div class="blessing-source">${source}</div>` : ''}
-  `;
-  inner.appendChild(div);
+
+  // 先放「拆禮物」按鈕
+  const btnWrap = document.createElement('div');
+  btnWrap.className = 'blessing-btn-wrap';
+  const btn = document.createElement('button');
+  btn.className = 'btn-open-blessing';
+  btn.innerHTML = '🪷 &nbsp;準備好了嗎？點一下，收祈福禮';
+  btnWrap.appendChild(btn);
+  inner.appendChild(btnWrap);
   scrollToBottom();
+
+  // 點下去才展開卡片
+  btn.addEventListener('click', () => {
+    btnWrap.remove();
+    const div = document.createElement('div');
+    div.className = 'blessing';
+    const source = title ? `——〈${title}〉${book ? '《' + book + '》' : ''}` : '';
+    div.innerHTML = `
+      <span class="blessing-icon">🪷</span>
+      <div class="blessing-label">✦ 善緣的祈福禮 ✦</div>
+      <div class="blessing-quote">「${quote}」</div>
+      ${source ? `<div class="blessing-source">${source}</div>` : ''}
+    `;
+    inner.appendChild(div);
+    scrollToBottom();
+  }, { once: true });
 }
 
 function scrollToBottom() {
