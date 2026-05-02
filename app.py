@@ -39,9 +39,9 @@ MAX_RETRIEVED = 3  # 每輪檢索附上的語料數
 
 # 道別關鍵詞（偵測祈福禮時機）
 FAREWELL_WORDS = [
-    "再見", "拜拜", "掰掰", "bye", "goodbye", "謝謝", "感謝", "謝了",
-    "先這樣", "先這樣了", "回去了", "要去了", "結束了", "告辭",
-    "感恩", "辛苦了", "辛苦你了", "下次見", "有空再聊",
+    "再見", "拜拜", "掰掰", "bye", "goodbye",
+    "先這樣了", "回去了", "要去了", "結束了", "告辭",
+    "辛苦你了", "下次見", "有空再聊",
 ]
 
 st.set_page_config(
@@ -286,12 +286,10 @@ st.markdown("""
 # 散落花瓣（fixed 固定在畫面，不跟著對話滾動）
 st.markdown("""
 <div style="pointer-events:none;">
-  <span style="position:fixed; font-size:40px; opacity:0.22; top:12vh; left:2vw; transform:rotate(-15deg); z-index:0;">🪷</span>
-  <span style="position:fixed; font-size:26px; opacity:0.18; top:28vh; right:3vw; transform:rotate(20deg); z-index:0;">🪷</span>
-  <span style="position:fixed; font-size:32px; opacity:0.20; top:48vh; left:1.5vw; transform:rotate(10deg); z-index:0;">🪷</span>
-  <span style="position:fixed; font-size:22px; opacity:0.16; top:42vh; right:2vw; transform:rotate(-25deg); z-index:0;">🪷</span>
-  <span style="position:fixed; font-size:34px; opacity:0.18; top:68vh; right:1.5vw; transform:rotate(8deg); z-index:0;">🪷</span>
-  <span style="position:fixed; font-size:22px; opacity:0.15; bottom:15vh; left:3vw; transform:rotate(30deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:36px; opacity:0.22; top:15vh; right:1.5vw; transform:rotate(20deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:28px; opacity:0.18; top:38vh; right:1vw; transform:rotate(-15deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:32px; opacity:0.20; top:62vh; right:2vw; transform:rotate(10deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:22px; opacity:0.15; bottom:12vh; right:1.5vw; transform:rotate(-20deg); z-index:0;">🪷</span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -515,34 +513,13 @@ for msg in st.session_state.messages:
 # 錨點：語音 rerun 後捲到這裡
 st.markdown('<div id="chat-bottom"></div>', unsafe_allow_html=True)
 
-# 若語音剛辨識完，自動捲到最新訊息
-if st.session_state.get("scroll_to_bottom"):
-    st.session_state["scroll_to_bottom"] = False
-    st.components.v1.html("""
-<script>
-(function() {
-  function scrollToBottom() {
-    var el = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
-    if (el) { el.scrollTop = el.scrollHeight; return; }
-    var body = window.parent.document.body;
-    if (body) body.scrollTop = body.scrollHeight;
-  }
-  setTimeout(scrollToBottom, 100);
-  setTimeout(scrollToBottom, 400);
-})();
-</script>
-""", height=0)
-
-# 取出語音輸入（若有）
-voice_text = st.session_state.pop("voice_input", None)
+# ==========================================
+# 使用者輸入（文字）
+# ==========================================
+user_input = st.chat_input("想說什麼？")
 
 # ==========================================
-# 使用者輸入
-# ==========================================
-user_input = voice_text or st.chat_input("想說什麼？")
-
-# ==========================================
-# 語音輸入（在文字框下方，不用 expander）
+# 語音輸入（辨識完直接在原地處理，不 rerun）
 # ==========================================
 st.markdown("<div style='height:0.5rem;'></div>", unsafe_allow_html=True)
 col_left, col_voice, col_right = st.columns([2, 3, 2])
@@ -551,7 +528,6 @@ with col_voice:
 
     if voice_btn or st.session_state.get("show_audio_input"):
         st.session_state["show_audio_input"] = True
-        prompt_hint = "以下是中文語音內容："
 
         audio = st.audio_input("🎤 按下錄音，說完再按停止", key="audio_recorder", label_visibility="collapsed")
         if audio is not None:
@@ -566,16 +542,53 @@ with col_voice:
                             "https://api.groq.com/openai/v1/audio/transcriptions",
                             headers={"Authorization": f"Bearer {groq_key}"},
                             files={"file": ("audio.wav", audio.getvalue(), "audio/wav")},
-                            data={"model": "whisper-large-v3-turbo", "language": "zh", "prompt": prompt_hint},
+                            data={"model": "whisper-large-v3-turbo", "language": "zh", "prompt": "以下是中文語音內容："},
                             timeout=30,
                         )
                         result = response.json()
-                        transcript = result.get("text", "")
+                        transcript = result.get("text", "").strip()
                         if transcript:
-                            st.session_state["voice_input"] = transcript
+                            # 直接在原地處理，完全不呼叫 st.rerun()
                             st.session_state["show_audio_input"] = False
-                            st.session_state["scroll_to_bottom"] = True
-                            st.rerun()
+                            st.session_state.messages.append({"role": "user", "content": transcript})
+                            with st.chat_message("user"):
+                                st.markdown(transcript)
+                            # 直接處理回應（不透過下方的 user_input 流程）
+                            user_input = None  # 避免下方重複處理
+                            farewell_v = is_farewell(transcript)
+                            recent_v = " ".join(m["content"] for m in st.session_state.messages[-3:] if m["role"] == "user")
+                            retrieved_v = retrieve(corpus, recent_v)
+                            retrieval_v = format_retrieved(retrieved_v)
+                            farewell_inst_v = ""
+                            if farewell_v:
+                                farewell_inst_v = (
+                                    "\n\n---\n【本輪提示】使用者正在道別。"
+                                    "請用溫暖自然的語氣道別，在回應最後自然加上：「離開前，我會送你一句大師的話，帶著走。」\n"
+                                )
+                            full_sys_v = system_prompt + retrieval_v + farewell_inst_v
+                            with st.chat_message("assistant", avatar="🪷"):
+                                placeholder_v = st.empty()
+                                full_resp_v = ""
+                                try:
+                                    with client.messages.stream(
+                                        model=MODEL, max_tokens=1024, system=full_sys_v,
+                                        messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
+                                    ) as stream:
+                                        for text in stream.text_stream:
+                                            full_resp_v += text
+                                            placeholder_v.markdown(full_resp_v + "▌")
+                                    placeholder_v.markdown(full_resp_v)
+                                except Exception as e:
+                                    full_resp_v = f"（連線出了點狀況：{e}）"
+                                    placeholder_v.markdown(full_resp_v)
+                                if farewell_v:
+                                    full_conv_v = " ".join(m["content"] for m in st.session_state.messages)
+                                    blessing_v = get_blessing(corpus, full_conv_v)
+                                    if blessing_v:
+                                        show_blessing(blessing_v)
+                            st.session_state.messages.append({"role": "assistant", "content": full_resp_v})
+                            if farewell_v:
+                                st.session_state.auto_blessing = None
                         elif "error" in result:
                             err = result["error"].get("code", "")
                             if err == "rate_limit_exceeded":
