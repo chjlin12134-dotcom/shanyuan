@@ -286,12 +286,12 @@ st.markdown("""
 # 散落花瓣（fixed 固定在畫面，不跟著對話滾動）
 st.markdown("""
 <div style="pointer-events:none;">
-  <span style="position:fixed; font-size:38px; opacity:0.09; top:12vh; left:2vw; transform:rotate(-15deg); z-index:0;">🪷</span>
-  <span style="position:fixed; font-size:22px; opacity:0.07; top:22vh; right:3vw; transform:rotate(20deg); z-index:0;">🪷</span>
-  <span style="position:fixed; font-size:28px; opacity:0.08; top:45vh; left:1.5vw; transform:rotate(10deg); z-index:0;">🪷</span>
-  <span style="position:fixed; font-size:18px; opacity:0.07; top:38vh; right:2vw; transform:rotate(-25deg); z-index:0;">🪷</span>
-  <span style="position:fixed; font-size:32px; opacity:0.065; top:68vh; right:1.5vw; transform:rotate(8deg); z-index:0;">🪷</span>
-  <span style="position:fixed; font-size:20px; opacity:0.06; bottom:15vh; left:3vw; transform:rotate(30deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:40px; opacity:0.22; top:12vh; left:2vw; transform:rotate(-15deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:26px; opacity:0.18; top:28vh; right:3vw; transform:rotate(20deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:32px; opacity:0.20; top:48vh; left:1.5vw; transform:rotate(10deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:22px; opacity:0.16; top:42vh; right:2vw; transform:rotate(-25deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:34px; opacity:0.18; top:68vh; right:1.5vw; transform:rotate(8deg); z-index:0;">🪷</span>
+  <span style="position:fixed; font-size:22px; opacity:0.15; bottom:15vh; left:3vw; transform:rotate(30deg); z-index:0;">🪷</span>
 </div>
 """, unsafe_allow_html=True)
 
