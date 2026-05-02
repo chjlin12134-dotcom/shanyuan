@@ -9,6 +9,7 @@ COPY app_fastapi.py .
 COPY index.html .
 COPY system_prompt.md .
 COPY shanyuan_corpus.csv .
+COPY public/ ./public/
 
 EXPOSE 7860
 
