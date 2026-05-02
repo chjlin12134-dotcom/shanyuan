@@ -2,8 +2,8 @@ services:
   - type: web
     name: shanyuan
     runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python -m uvicorn app_fastapi:app --host 0.0.0.0 --port $PORT
+    buildCommand: pip install -r requirements-render.txt
+    startCommand: uvicorn app_fastapi:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: ANTHROPIC_API_KEY
         sync: false
