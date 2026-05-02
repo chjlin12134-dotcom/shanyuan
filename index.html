@@ -469,10 +469,10 @@ textarea#text-input::placeholder { color: #b0a088; }
   .info-bar { display: none; }
   /* 手機版：荷花背景放大，讓右側荷花清楚可見 */
   #lotus-bg {
-    width: 200%;
-    height: 420px;
-    opacity: 0.82;
-    left: -20%;
+    width: 220%;
+    height: 480px;
+    opacity: 0.95;
+    left: -35%;
   }
   /* 手機版輸入區微調 */
   footer { padding: 8px 10px 12px; }
@@ -887,7 +887,7 @@ textarea#text-input::placeholder { color: #b0a088; }
 <script>
 let messages = [];
 let isStreaming = false;
-let blessingGiven = sessionStorage.getItem('blessingGiven') === '1';  // 祈福禮只送一次（跨重整保留）
+let blessingGiven = false;  // 同一次對話只送一次，重整=新對話可再送
 
 window.addEventListener('DOMContentLoaded', () => {
   addMessage('assistant', '嗨，我是善緣。你今天過得怎麼樣？');
@@ -1025,7 +1025,6 @@ async function sendMessage(userText) {
           } else if (data.type === 'blessing') {
             if (!blessingGiven) {
               blessingGiven = true;
-              sessionStorage.setItem('blessingGiven', '1');
               addBlessing(data.quote, data.title, data.book);
             }
           } else if (data.type === 'done') {
