@@ -497,6 +497,10 @@ if "messages" not in st.session_state:
     ]
 if "auto_blessing" not in st.session_state:
     st.session_state.auto_blessing = None
+if "audio_key" not in st.session_state:
+    st.session_state.audio_key = 0
+if "last_audio_transcript" not in st.session_state:
+    st.session_state.last_audio_transcript = ""
 
 
 # ==========================================
@@ -529,7 +533,8 @@ with col_voice:
     if voice_btn or st.session_state.get("show_audio_input"):
         st.session_state["show_audio_input"] = True
 
-        audio = st.audio_input("🎤 按下錄音，說完再按停止", key="audio_recorder", label_visibility="collapsed")
+        audio_widget_key = f"audio_recorder_{st.session_state.audio_key}"
+        audio = st.audio_input("🎤 按下錄音，說完再按停止", key=audio_widget_key, label_visibility="collapsed")
         if audio is not None:
             groq_key = os.environ.get("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY", "")
             if not groq_key:
@@ -548,8 +553,15 @@ with col_voice:
                         result = response.json()
                         transcript = result.get("text", "").strip()
                         if transcript:
+                            # 防止重複辨識同一段錄音
+                            if transcript == st.session_state.last_audio_transcript:
+                                transcript = ""  # 忽略重複
+                            else:
+                                st.session_state.last_audio_transcript = transcript
+                        if transcript:
                             # 直接在原地處理，完全不呼叫 st.rerun()
                             st.session_state["show_audio_input"] = False
+                            st.session_state.audio_key += 1  # 讓舊 widget 失效，下次重開是全新的
                             st.session_state.messages.append({"role": "user", "content": transcript})
                             with st.chat_message("user"):
                                 st.markdown(transcript)
@@ -592,12 +604,14 @@ with col_voice:
                         elif "error" in result:
                             err = result["error"].get("code", "")
                             st.session_state["show_audio_input"] = False
+                            st.session_state.audio_key += 1
                             if err == "rate_limit_exceeded":
                                 st.warning("請稍等幾秒再試一次 🙏")
                             else:
                                 st.error(result["error"].get("message", "辨識失敗"))
                     except Exception as e:
                         st.session_state["show_audio_input"] = False
+                        st.session_state.audio_key += 1
                         st.error(f"語音辨識失敗：{e}")
 if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
