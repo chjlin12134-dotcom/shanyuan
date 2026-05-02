@@ -453,8 +453,8 @@ with st.sidebar:
     )
     st.divider()
     st.markdown(
-        "<p style='font-size:10.5px; color:#7a8a7a; line-height:1.5; margin:0;'>"
-        "🙏 感謝<b>佛光山人間佛教研究院</b><br>開放大師全集，支持「善緣」。</p>",
+        "<p style='font-size:10.5px; color:#7a8a7a; line-height:1.8; margin:0;'>"
+        "🪷 感謝<b>佛光山人間佛教研究院</b><br>開放大師全集，支持「善緣」。🪷</p>",
         unsafe_allow_html=True,
     )
 
@@ -591,11 +591,13 @@ with col_voice:
                                 st.session_state.auto_blessing = None
                         elif "error" in result:
                             err = result["error"].get("code", "")
+                            st.session_state["show_audio_input"] = False
                             if err == "rate_limit_exceeded":
                                 st.warning("請稍等幾秒再試一次 🙏")
                             else:
                                 st.error(result["error"].get("message", "辨識失敗"))
                     except Exception as e:
+                        st.session_state["show_audio_input"] = False
                         st.error(f"語音辨識失敗：{e}")
 if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
