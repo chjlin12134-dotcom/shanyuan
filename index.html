@@ -2,8 +2,8 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>善緣 · 在這裡陪你</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>人間善緣 · 在這裡陪你</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🪷</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -11,7 +11,6 @@
 
 body {
   font-family: 'Noto Serif TC', Georgia, serif;
-  /* 宣紙米白底——帶一點溫暖的灰褐 */
   background-color: #ede6d8;
   background-image:
     radial-gradient(ellipse at 12% 18%, rgba(140,160,130,0.12) 0%, transparent 48%),
@@ -24,7 +23,6 @@ body {
   position: relative;
 }
 
-/* ── 水墨荷花背景（SVG inline，低調） ── */
 #lotus-bg {
   position: fixed;
   bottom: 0; left: 0;
@@ -33,6 +31,64 @@ body {
   z-index: 0;
   opacity: 0.90;
 }
+
+/* ── 歡迎彈窗 ── */
+#welcome-overlay {
+  position: fixed; inset: 0;
+  background: rgba(30,25,18,0.55);
+  backdrop-filter: blur(3px);
+  z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeInOverlay 0.5s ease both;
+}
+#welcome-overlay.hide {
+  animation: fadeOutOverlay 0.4s ease both;
+  pointer-events: none;
+}
+@keyframes fadeInOverlay { from { opacity:0 } to { opacity:1 } }
+@keyframes fadeOutOverlay { from { opacity:1 } to { opacity:0 } }
+
+.welcome-card {
+  background: linear-gradient(160deg, rgba(253,249,240,0.98) 0%, rgba(244,237,222,0.97) 100%);
+  border: 1px solid rgba(175,150,110,0.45);
+  border-top: 3px solid rgba(160,130,80,0.6);
+  border-radius: 4px;
+  max-width: 360px; width: 100%;
+  padding: 30px 28px 26px;
+  text-align: center;
+  box-shadow: 0 12px 48px rgba(60,45,28,0.28), 0 2px 8px rgba(60,45,28,0.12);
+  position: relative;
+}
+.welcome-card::before {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(180,150,90,0.7), transparent);
+}
+.welcome-lotus {
+  font-size: 28px; display: block; margin-bottom: 10px;
+  animation: floatLotus 3s ease-in-out infinite;
+}
+@keyframes floatLotus {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.welcome-title {
+  font-size: 17px; font-weight: 400; letter-spacing: 0.3em;
+  color: #3a3228; margin-bottom: 18px;
+  text-shadow: 0 1px 2px rgba(100,80,60,0.1);
+}
+.welcome-body {
+  font-size: 14px; color: #524840; line-height: 2.1;
+  text-align: left; margin-bottom: 20px;
+  border-top: 1px solid rgba(170,150,110,0.2);
+  border-bottom: 1px solid rgba(170,150,110,0.2);
+  padding: 16px 0;
+}
+.welcome-hint {
+  font-size: 11px; color: #9a8870; letter-spacing: 0.12em;
+}
+
 
 /* ── 頂部標題 ── */
 header {
@@ -59,33 +115,44 @@ header {
   background: linear-gradient(90deg, transparent, rgba(150,130,100,0.45), transparent);
 }
 .header-title {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 400;
-  letter-spacing: 0.5em;
+  letter-spacing: 0.35em;
   color: #3a3228;
   text-shadow: 0 1px 2px rgba(100,80,60,0.12);
   display: flex;
   align-items: center;
   gap: 8px;
+  white-space: nowrap;
 }
-.header-lotus {
-  font-size: 20px;
-  letter-spacing: 0;
-  line-height: 1;
-  filter: drop-shadow(0 1px 2px rgba(160,100,100,0.18));
-}
-.header-lotus-svg {
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  filter: drop-shadow(0 1px 3px rgba(180,80,100,0.22));
-}
+.header-lotus { font-size: 18px; letter-spacing: 0; line-height: 1; }
 .header-sub {
   text-align: center;
   font-size: 10.5px;
   color: #8a806e;
   letter-spacing: 0.3em;
   padding-bottom: 10px;
+}
+
+/* 手機版 header 荷花裝飾 */
+.header-mobile-deco {
+  display: none;
+  justify-content: center;
+  padding: 0 0 6px;
+  font-size: 26px;
+  line-height: 1;
+}
+/* 手機版「關於善緣」獨立按鈕列 */
+.header-info-btn-mobile {
+  display: none;
+  justify-content: center;
+  padding: 2px 0 0;
+}
+@media (max-width: 600px) {
+  .header-mobile-deco { display: flex; }
+  .header-info-btn-mobile { display: flex; }
+  /* 桌機版的 btn-info (absolute) 在手機隱藏 */
+  .header-main > .btn-info { display: none; }
 }
 
 /* 摺疊介紹 */
@@ -96,7 +163,7 @@ header {
   max-height: 0;
   transition: max-height 0.35s ease;
 }
-.info-bar.open { max-height: 260px; }
+.info-bar.open { max-height: 300px; }
 .info-bar-inner {
   display: flex;
   padding: 16px 24px;
@@ -113,13 +180,7 @@ header {
   border-right: 1px solid rgba(170,155,130,0.28);
 }
 .info-section:last-child { border-right: none; }
-.info-section strong {
-  color: #6a5a40;
-  display: block;
-  margin-bottom: 4px;
-  font-size: 11.5px;
-  letter-spacing: 0.08em;
-}
+.info-section strong { color: #6a5a40; display: block; margin-bottom: 4px; font-size: 11.5px; letter-spacing: 0.08em; }
 
 .btn-info {
   position: absolute;
@@ -147,9 +208,9 @@ header {
   flex-direction: column;
   position: relative;
   z-index: 1;
-  /* 自訂捲軸 */
   scrollbar-width: thin;
   scrollbar-color: rgba(150,130,100,0.25) transparent;
+  -webkit-overflow-scrolling: touch;
 }
 #chat::-webkit-scrollbar { width: 5px; }
 #chat::-webkit-scrollbar-track { background: transparent; }
@@ -172,10 +233,8 @@ header {
   line-height: 1.95;
   color: #2e2820;
   word-break: break-word;
-  border-radius: 4px;
 }
 
-/* 善緣訊息：接近宣紙白，帶淡墨邊 */
 .msg.assistant {
   align-self: flex-start;
   background: rgba(252,248,240,0.96);
@@ -187,7 +246,6 @@ header {
   box-shadow: 2px 3px 16px rgba(100,80,60,0.08), 0 1px 3px rgba(100,80,60,0.05);
 }
 
-/* 使用者訊息：極淡青綠，像竹簡 */
 .msg.user {
   align-self: flex-end;
   background: rgba(228,238,228,0.88);
@@ -199,20 +257,12 @@ header {
   box-shadow: -2px 3px 16px rgba(80,100,80,0.08);
 }
 
-.msg-label {
-  display: block;
-  font-size: 11px;
-  color: #8a7055;
-  letter-spacing: 0.08em;
-  margin-bottom: 6px;
-}
+.msg-label { display: block; font-size: 11px; color: #8a7055; letter-spacing: 0.08em; margin-bottom: 6px; }
 
 /* 打字動畫 */
 .typing-wrap { align-self: flex-start; }
 .typing {
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
+  display: inline-flex; gap: 6px; align-items: center;
   padding: 14px 20px;
   background: rgba(252,248,240,0.96);
   border-left: 3px solid rgba(160,130,90,0.55);
@@ -235,31 +285,21 @@ header {
   40% { transform:translateY(-6px); opacity:1; }
 }
 
-/* 祈福禮——拆禮物按鈕 */
-.blessing-btn-wrap {
-  align-self: center;
-  text-align: center;
-  margin: 8px 0;
-}
+/* 祈福禮 */
+.blessing-btn-wrap { align-self: center; text-align: center; margin: 8px 0; }
 .btn-open-blessing {
   font-family: 'Noto Serif TC', serif;
-  font-size: 14px;
-  color: #6a5030;
+  font-size: 14px; color: #6a5030;
   background: linear-gradient(160deg, rgba(252,244,228,0.96), rgba(244,232,210,0.94));
   border: 1px solid rgba(170,140,90,0.55);
-  border-radius: 4px;
-  padding: 12px 28px;
-  cursor: pointer;
-  letter-spacing: 0.12em;
+  border-radius: 4px; padding: 12px 28px;
+  cursor: pointer; letter-spacing: 0.12em;
   box-shadow: 0 2px 12px rgba(140,100,50,0.12);
-  transition: all 0.2s;
-  position: relative;
-  overflow: hidden;
+  transition: all 0.2s; position: relative; overflow: hidden;
 }
 .btn-open-blessing::before {
   content: "";
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   background: linear-gradient(120deg, transparent 40%, rgba(255,240,200,0.4) 50%, transparent 60%);
   transform: translateX(-100%);
   animation: shimmer 2.4s infinite;
@@ -274,22 +314,15 @@ header {
   box-shadow: 0 4px 18px rgba(140,100,50,0.18);
 }
 
-/* 祈福禮——捲軸感卡片 */
 .blessing {
-  align-self: center;
-  width: 92%;
-  background: linear-gradient(160deg,
-    rgba(252,248,238,0.97) 0%,
-    rgba(244,236,220,0.95) 100%);
+  align-self: center; width: 92%;
+  background: linear-gradient(160deg, rgba(252,248,238,0.97) 0%, rgba(244,236,220,0.95) 100%);
   border: 1px solid rgba(170,145,100,0.35);
   border-left: 4px solid rgba(160,130,80,0.6);
   border-right: 4px solid rgba(160,130,80,0.6);
-  border-radius: 2px;
-  padding: 22px 28px;
-  text-align: center;
+  border-radius: 2px; padding: 22px 28px; text-align: center;
   box-shadow: 0 4px 24px rgba(100,80,50,0.1), 0 1px 4px rgba(100,80,50,0.06);
   position: relative;
-  /* 展開動畫 */
   animation: unfold 0.7s cubic-bezier(0.22,1,0.36,1) both;
   transform-origin: top center;
 }
@@ -298,34 +331,13 @@ header {
   40%  { opacity: 0.6; }
   100% { opacity: 1; transform: scaleY(1) translateY(0); }
 }
-.blessing::before, .blessing::after {
-  content: "❧";
-  position: absolute;
-  top: 10px;
-  color: rgba(150,120,70,0.4);
-  font-size: 14px;
-}
+.blessing::before, .blessing::after { content: "❧"; position: absolute; top: 10px; color: rgba(150,120,70,0.4); font-size: 14px; }
 .blessing::before { left: 14px; }
 .blessing::after { right: 14px; }
 .blessing-icon { font-size: 20px; display: block; margin-bottom: 10px; opacity: 0.8; }
-.blessing-label {
-  font-size: 10px;
-  color: #8a7050;
-  letter-spacing: 0.4em;
-  margin-bottom: 14px;
-}
-.blessing-quote {
-  font-size: 15px;
-  color: #3a3020;
-  line-height: 2.2;
-  font-weight: 400;
-}
-.blessing-source {
-  font-size: 11px;
-  color: #8a7050;
-  margin-top: 12px;
-  letter-spacing: 0.06em;
-}
+.blessing-label { font-size: 10px; color: #8a7050; letter-spacing: 0.4em; margin-bottom: 14px; }
+.blessing-quote { font-size: 15px; color: #3a3020; line-height: 2.2; font-weight: 400; }
+.blessing-source { font-size: 11px; color: #8a7050; margin-top: 12px; letter-spacing: 0.06em; }
 
 /* ── 底部輸入 ── */
 footer {
@@ -335,72 +347,45 @@ footer {
   border-top: 1px solid rgba(170,155,130,0.28);
   box-shadow: 0 -2px 16px rgba(100,80,60,0.06);
   padding: 10px 14px 14px;
-  position: relative;
-  z-index: 10;
+  position: relative; z-index: 10;
+  /* 手機安全區域 */
+  padding-bottom: max(14px, env(safe-area-inset-bottom));
 }
 
 #record-bar {
-  display: none;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 14px;
-  margin-bottom: 8px;
+  display: none; align-items: center; gap: 10px;
+  padding: 6px 14px; margin-bottom: 8px;
   background: rgba(245,232,228,0.9);
   border: 1px solid rgba(190,150,140,0.4);
-  border-radius: 4px;
-  font-size: 13px;
-  color: #7a4a40;
-  max-width: 640px;
-  margin-left: auto;
-  margin-right: auto;
+  border-radius: 4px; font-size: 13px; color: #7a4a40;
+  max-width: 640px; margin-left: auto; margin-right: auto;
 }
 #record-bar.show { display: flex; }
-.rec-dot {
-  width: 8px; height: 8px;
-  background: #b05050;
-  border-radius: 50%;
-  animation: blink 1s infinite;
-  flex-shrink: 0;
-}
+.rec-dot { width: 8px; height: 8px; background: #b05050; border-radius: 50%; animation: blink 1s infinite; flex-shrink: 0; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.15} }
 #rec-timer { font-variant-numeric: tabular-nums; }
 .btn-rec-stop {
-  margin-left: auto;
-  background: #9a4840;
-  color: rgba(252,248,240,0.95);
-  border: none;
-  border-radius: 4px;
-  padding: 4px 14px;
-  font-size: 12px;
-  cursor: pointer;
-  font-family: 'Noto Serif TC', serif;
-  letter-spacing: 0.06em;
+  margin-left: auto; background: #9a4840; color: rgba(252,248,240,0.95);
+  border: none; border-radius: 4px; padding: 4px 14px; font-size: 12px;
+  cursor: pointer; font-family: 'Noto Serif TC', serif; letter-spacing: 0.06em;
 }
 
 .input-row {
-  display: flex;
-  gap: 10px;
-  align-items: flex-end;
-  max-width: 640px;
-  margin: 0 auto;
+  display: flex; gap: 10px; align-items: flex-end;
+  max-width: 640px; margin: 0 auto;
 }
 
 textarea#text-input {
-  flex: 1;
-  font-family: 'Noto Serif TC', serif;
-  font-size: 15px;
-  color: #2e2820;
+  flex: 1; font-family: 'Noto Serif TC', serif;
+  font-size: 15px; color: #2e2820;
   background: rgba(252,248,240,0.97);
   border: 1px solid rgba(170,150,115,0.45);
-  border-radius: 4px;
-  padding: 12px 16px;
-  resize: none;
-  outline: none;
-  min-height: 48px;
-  max-height: 130px;
-  line-height: 1.7;
+  border-radius: 4px; padding: 12px 16px; resize: none; outline: none;
+  min-height: 48px; max-height: 130px; line-height: 1.7;
   box-shadow: inset 0 1px 4px rgba(100,80,60,0.05);
   transition: border-color 0.2s, box-shadow 0.2s;
+  /* 手機防止縮放 */
+  font-size: max(16px, 15px);
 }
 textarea#text-input:focus {
   border-color: rgba(140,115,80,0.65);
@@ -409,35 +394,25 @@ textarea#text-input:focus {
 textarea#text-input::placeholder { color: #b0a088; }
 
 .icon-btn {
-  width: 48px; height: 48px;
-  border-radius: 4px;
-  cursor: pointer;
+  width: 48px; height: 48px; border-radius: 4px; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-  transition: all 0.2s;
-  border: 1px solid;
+  font-size: 20px; flex-shrink: 0; transition: all 0.2s; border: 1px solid;
 }
 .btn-send {
   background: linear-gradient(160deg, rgba(100,130,95,0.85), rgba(80,110,75,0.9));
-  border-color: rgba(80,110,75,0.6);
-  font-size: 17px;
-  color: rgba(248,244,236,0.95);
-  box-shadow: 0 2px 8px rgba(60,90,60,0.18);
+  border-color: rgba(80,110,75,0.6); font-size: 17px;
+  color: rgba(248,244,236,0.95); box-shadow: 0 2px 8px rgba(60,90,60,0.18);
 }
 .btn-send:hover { background: linear-gradient(160deg, rgba(85,115,80,0.9), rgba(65,95,60,0.95)); transform: translateY(-1px); }
 .btn-send:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
-
 .btn-voice {
-  background: rgba(248,244,236,0.92);
-  border-color: rgba(170,150,115,0.45);
+  background: rgba(248,244,236,0.92); border-color: rgba(170,150,115,0.45);
   box-shadow: 0 2px 6px rgba(100,80,60,0.1);
 }
 .btn-voice:hover { background: rgba(238,232,220,0.95); transform: translateY(-1px); }
 .btn-voice:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
 .btn-voice.recording {
-  background: rgba(245,228,225,0.95);
-  border-color: rgba(180,110,100,0.6);
+  background: rgba(245,228,225,0.95); border-color: rgba(180,110,100,0.6);
   animation: pulse 1.4s infinite;
 }
 @keyframes pulse {
@@ -448,40 +423,98 @@ textarea#text-input::placeholder { color: #b0a088; }
 .hint { height: 0; overflow: hidden; }
 
 .toast {
-  position: fixed;
-  bottom: 100px; left: 50%;
+  position: fixed; bottom: 100px; left: 50%;
   transform: translateX(-50%);
-  background: rgba(40,35,28,0.88);
-  color: rgba(248,244,236,0.95);
-  padding: 9px 22px;
-  border-radius: 4px;
-  font-size: 13px;
-  z-index: 200;
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
+  background: rgba(40,35,28,0.88); color: rgba(248,244,236,0.95);
+  padding: 9px 22px; border-radius: 4px; font-size: 13px;
+  z-index: 200; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  max-width: 90vw; text-align: center;
 }
 .toast.show { opacity: 1; }
 
+/* ══════════════════════════════════
+   手機響應式（全面強化）
+   ══════════════════════════════════ */
 @media (max-width: 600px) {
-  .msg { max-width: 90%; font-size: 15px; }
-  .btn-info { display: none; }
-  .info-bar { display: none; }
-  /* 手機版：荷花背景放大，讓右側荷花清楚可見 */
-  #lotus-bg {
-    width: 220%;
-    height: 480px;
-    opacity: 0.95;
-    left: -35%;
+  /* 標題縮小、不換行 */
+  .header-title { font-size: 17px; letter-spacing: 0.2em; }
+  .header-sub { font-size: 9.5px; letter-spacing: 0.2em; }
+  .header-main { padding: 10px 12px 4px; gap: 10px; }
+  .header-deco-line { max-width: 40px; }
+
+  /* 手機版「關於善緣」改為緊湊樣式 */
+  .btn-info {
+    display: block;
+    position: static;
+    transform: none;
+    margin: 4px auto 0;
+    font-size: 11px;
+    padding: 3px 14px;
+    border-radius: 10px;
   }
-  /* 手機版輸入區微調 */
-  footer { padding: 8px 10px 12px; }
+  .header-main { position: relative; }
+
+  /* info-bar 手機版單欄顯示 */
+  .info-bar-inner {
+    flex-direction: column;
+    padding: 12px 16px;
+    gap: 0;
+  }
+  .info-section {
+    padding: 8px 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(170,155,130,0.2);
+    font-size: 12px;
+  }
+  .info-section:last-child { border-bottom: none; }
+
+  /* 對話泡泡：手機全寬 */
+  .msg { max-width: 88%; font-size: 15px; padding: 12px 14px; line-height: 1.85; }
+  .msg-label { font-size: 10px; }
+
+  /* 聊天區 padding */
+  #chat { padding: 14px 10px 6px; gap: 12px; }
+
+  /* 荷花背景：手機版 - 置中顯示，尺寸合適 */
+  #lotus-bg {
+    width: 100%;
+    height: 50vh;
+    opacity: 0.82;
+    left: 0;
+  }
+
+  /* 輸入區 */
+  footer { padding: 8px 10px; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
   .input-row { gap: 8px; }
-  textarea#text-input { font-size: 16px; padding: 10px 12px; }
-  .icon-btn { width: 44px; height: 44px; }
-  /* 手機版祈福禮卡片 */
-  .blessing { width: 98%; padding: 18px 16px; }
-  .blessing-quote { font-size: 14px; }
+  textarea#text-input { padding: 10px 12px; min-height: 44px; font-size: max(16px, 15px); }
+  .icon-btn { width: 44px; height: 44px; font-size: 18px; }
+
+  /* 祈福禮卡片 */
+  .blessing { width: 98%; padding: 16px 14px; }
+  .blessing-quote { font-size: 14px; line-height: 2.0; }
+  .blessing-label { font-size: 9px; letter-spacing: 0.25em; }
+
+  /* 錄音提示列 */
+  #record-bar { font-size: 12px; padding: 5px 10px; }
+
+  /* 打字動畫 */
+  .typing { padding: 12px 16px; }
+  .typing span { width: 6px; height: 6px; }
+
+  /* toast 位置調高，避免被鍵盤遮住 */
+  .toast { bottom: 130px; font-size: 12px; padding: 8px 16px; }
+
+  /* 歡迎彈窗手機調整 */
+  .welcome-card { padding: 24px 20px 20px; max-width: 100%; }
+  .welcome-title { font-size: 16px; }
+  .welcome-body { font-size: 13.5px; line-height: 2.0; }
+}
+
+/* 極小螢幕（320px 以下） */
+@media (max-width: 360px) {
+  .header-title { font-size: 15px; letter-spacing: 0.12em; }
+  .msg { max-width: 94%; font-size: 14px; }
+  .icon-btn { width: 40px; height: 40px; font-size: 16px; }
 }
 </style>
 </head>
@@ -491,7 +524,6 @@ textarea#text-input::placeholder { color: #b0a088; }
 <svg id="lotus-bg" aria-hidden="true" viewBox="0 0 1200 580"
   xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet">
   <defs>
-    <!-- 荷葉：深墨綠，略帶透明 -->
     <radialGradient id="gl1" cx="38%" cy="32%" r="68%">
       <stop offset="0%"   stop-color="#5a6b4a" stop-opacity="0.52"/>
       <stop offset="55%"  stop-color="#3d5030" stop-opacity="0.38"/>
@@ -501,7 +533,6 @@ textarea#text-input::placeholder { color: #b0a088; }
       <stop offset="0%"   stop-color="#4a5c3c" stop-opacity="0.42"/>
       <stop offset="100%" stop-color="#263520" stop-opacity="0.08"/>
     </radialGradient>
-    <!-- 花瓣：極淡墨粉，接近宣紙本色，帶一絲胭脂 -->
     <radialGradient id="gp1" cx="50%" cy="65%" r="58%">
       <stop offset="0%"   stop-color="#c8a8b2" stop-opacity="0.55"/>
       <stop offset="60%"  stop-color="#b89098" stop-opacity="0.30"/>
@@ -511,340 +542,122 @@ textarea#text-input::placeholder { color: #b0a088; }
       <stop offset="0%"   stop-color="#d8b8c0" stop-opacity="0.62"/>
       <stop offset="100%" stop-color="#b08890" stop-opacity="0.08"/>
     </radialGradient>
-    <!-- 花苞 -->
     <radialGradient id="gb1" cx="50%" cy="28%" r="60%">
       <stop offset="0%"   stop-color="#c8a8b0" stop-opacity="0.68"/>
       <stop offset="100%" stop-color="#987080" stop-opacity="0.12"/>
     </radialGradient>
-    <!-- 水波 -->
     <linearGradient id="gwl" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%"   stop-color="#7a9090" stop-opacity="0"/>
       <stop offset="30%"  stop-color="#7a9090" stop-opacity="0.14"/>
       <stop offset="70%"  stop-color="#7a9090" stop-opacity="0.14"/>
       <stop offset="100%" stop-color="#7a9090" stop-opacity="0"/>
     </linearGradient>
-    <!-- 墨韻模糊（輕微，保留筆觸邊） -->
-    <filter id="inkf" x="-5%" y="-5%" width="110%" height="110%">
-      <feGaussianBlur stdDeviation="1.1"/>
-    </filter>
-    <filter id="inkf2" x="-5%" y="-5%" width="110%" height="110%">
-      <feGaussianBlur stdDeviation="0.5"/>
-    </filter>
-    <!-- 暈染效果：更軟 -->
-    <filter id="wash" x="-10%" y="-10%" width="120%" height="120%">
-      <feGaussianBlur stdDeviation="2.2"/>
-    </filter>
+    <filter id="inkf" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="1.1"/></filter>
+    <filter id="inkf2" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="0.5"/></filter>
+    <filter id="wash" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="2.2"/></filter>
   </defs>
 
-  <!-- ────── 水紋（全寬，清晰可見） ────── -->
+  <!-- 水紋 -->
   <g opacity="0.60">
-    <path d="M 0 498 Q 200 489 400 498 Q 600 507 800 498 Q 1000 489 1200 498"
-      stroke="url(#gwl)" stroke-width="1.8" fill="none"/>
-    <path d="M 0 520 Q 200 511 400 520 Q 600 529 800 520 Q 1000 511 1200 520"
-      stroke="url(#gwl)" stroke-width="1.5" fill="none"/>
-    <path d="M 0 542 Q 200 533 400 542 Q 600 551 800 542 Q 1000 533 1200 542"
-      stroke="url(#gwl)" stroke-width="1.3" fill="none"/>
-    <path d="M 0 562 Q 200 554 400 562 Q 600 570 800 562 Q 1000 554 1200 562"
-      stroke="url(#gwl)" stroke-width="1.1" fill="none"/>
-    <path d="M 0 476 Q 200 468 400 476 Q 600 484 800 476 Q 1000 468 1200 476"
-      stroke="url(#gwl)" stroke-width="1.0" fill="none" opacity="0.75"/>
-    <path d="M 0 453 Q 200 446 400 453 Q 600 460 800 453 Q 1000 446 1200 453"
-      stroke="url(#gwl)" stroke-width="0.8" fill="none" opacity="0.50"/>
+    <path d="M 0 498 Q 200 489 400 498 Q 600 507 800 498 Q 1000 489 1200 498" stroke="url(#gwl)" stroke-width="1.8" fill="none"/>
+    <path d="M 0 520 Q 200 511 400 520 Q 600 529 800 520 Q 1000 511 1200 520" stroke="url(#gwl)" stroke-width="1.5" fill="none"/>
+    <path d="M 0 542 Q 200 533 400 542 Q 600 551 800 542 Q 1000 533 1200 542" stroke="url(#gwl)" stroke-width="1.3" fill="none"/>
+    <path d="M 0 562 Q 200 554 400 562 Q 600 570 800 562 Q 1000 554 1200 562" stroke="url(#gwl)" stroke-width="1.1" fill="none"/>
   </g>
 
-  <!-- ════════ 左下角：浮水小荷葉 + 蓮藕 ════════ -->
-  <!-- 左下浮水荷葉（較大，水面上） -->
+  <!-- 左下荷葉 -->
   <g filter="url(#wash)" opacity="0.55">
-    <ellipse cx="110" cy="525" rx="88" ry="62"
-      fill="url(#gl1)" transform="rotate(10,110,525)"/>
+    <ellipse cx="110" cy="525" rx="88" ry="62" fill="url(#gl1)" transform="rotate(10,110,525)"/>
   </g>
   <g filter="url(#inkf2)" opacity="0.58">
-    <path d="M 110 462 C 108 485 108 505 110 525"
-      stroke="#2a3820" stroke-width="1.1" fill="none"/>
+    <path d="M 110 462 C 108 485 108 505 110 525" stroke="#2a3820" stroke-width="1.1" fill="none"/>
     <path d="M 110 490 C 75 494 42 502 15 510" stroke="#2a3820" stroke-width="0.8" fill="none" opacity="0.65"/>
     <path d="M 110 490 C 140 486 168 482 192 478" stroke="#2a3820" stroke-width="0.8" fill="none" opacity="0.65"/>
     <path d="M 110 510 C 68 516 30 524 5 530" stroke="#2a3820" stroke-width="0.7" fill="none" opacity="0.55"/>
     <path d="M 110 510 C 148 506 180 500 205 495" stroke="#2a3820" stroke-width="0.7" fill="none" opacity="0.55"/>
-    <path d="M 110 525 C 72 530 38 536 10 540" stroke="#2a3820" stroke-width="0.6" fill="none" opacity="0.42"/>
-    <!-- 葉緣微捲 -->
-    <path d="M 18 512 C 32 500 44 506" stroke="#2a3820" stroke-width="1.0" fill="none" opacity="0.48"/>
   </g>
-  <!-- 左下荷莖 -->
-  <path d="M 110 580 C 110 563 110 544 110 525"
-    stroke="#3a4830" stroke-width="2.2" fill="none" stroke-linecap="round"
-    opacity="0.45" filter="url(#inkf)"/>
+  <path d="M 110 580 C 110 563 110 544 110 525" stroke="#3a4830" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.45" filter="url(#inkf)"/>
 
-  <!-- 第二片小荷葉（左側更小，疊層） -->
-  <g filter="url(#wash)" opacity="0.38">
-    <ellipse cx="205" cy="548" rx="58" ry="42"
-      fill="url(#gl2)" transform="rotate(-6,205,548)"/>
-  </g>
-  <g filter="url(#inkf2)" opacity="0.42">
-    <path d="M 205 505 C 204 522 204 536 205 548"
-      stroke="#2a3820" stroke-width="0.9" fill="none"/>
-    <path d="M 205 528 C 178 532 155 538 136 542" stroke="#2a3820" stroke-width="0.6" fill="none" opacity="0.50"/>
-    <path d="M 205 528 C 228 524 250 518 268 514" stroke="#2a3820" stroke-width="0.6" fill="none" opacity="0.50"/>
-  </g>
-  <path d="M 205 580 C 204 568 204 556 205 548"
-    stroke="#3a4830" stroke-width="1.7" fill="none" stroke-linecap="round"
-    opacity="0.35" filter="url(#inkf)"/>
-
-  <!-- 第三株：高位蓮蓬（左側偏上，填補語音bar旁空白） -->
-  <!-- 蓮蓬莖，從底部延伸較高 -->
-  <path d="M 248 580 C 247 548 244 510 238 472 C 233 442 228 418 230 390"
-    stroke="#3a4830" stroke-width="2.0" fill="none" stroke-linecap="round"
-    opacity="0.40" filter="url(#inkf)"/>
-  <!-- 蓮蓬頭 -->
-  <g filter="url(#inkf2)" opacity="0.72">
-    <!-- 蓮蓬主體（橢圓形，帶紋路） -->
-    <ellipse cx="230" cy="375" rx="22" ry="18"
-      fill="#7a8858" fill-opacity="0.55"/>
-    <ellipse cx="230" cy="372" rx="20" ry="16"
-      fill="#8a9868" fill-opacity="0.45"/>
-    <!-- 蓮蓬頂面凹點（蓮子孔） -->
-    <circle cx="224" cy="368" r="3.2" fill="#3a4828" fill-opacity="0.50"/>
-    <circle cx="233" cy="366" r="3.0" fill="#3a4828" fill-opacity="0.48"/>
-    <circle cx="240" cy="370" r="2.8" fill="#3a4828" fill-opacity="0.45"/>
-    <circle cx="221" cy="374" r="2.6" fill="#3a4828" fill-opacity="0.42"/>
-    <circle cx="230" cy="374" r="2.8" fill="#3a4828" fill-opacity="0.45"/>
-    <circle cx="238" cy="376" r="2.5" fill="#3a4828" fill-opacity="0.40"/>
-    <!-- 蓮蓬托葉（萼片） -->
-    <path d="M 208 380 C 212 372 218 375 230 378 C 242 375 248 372 252 380 C 246 385 236 388 230 388 C 224 388 214 385 208 380 Z"
-      fill="#4a6038" fill-opacity="0.48"/>
-  </g>
-  <!-- 蓮蓬旁一片小立葉 -->
-  <g filter="url(#wash)" opacity="0.35">
-    <ellipse cx="206" cy="430" rx="38" ry="28"
-      fill="url(#gl2)" transform="rotate(20,206,430)"/>
-  </g>
-  <g filter="url(#inkf2)" opacity="0.38">
-    <path d="M 206 402 C 205 415 205 424 206 430"
-      stroke="#2a3820" stroke-width="0.8" fill="none"/>
-    <path d="M 206 416 C 188 418 173 422 162 426" stroke="#2a3820" stroke-width="0.6" fill="none" opacity="0.48"/>
-    <path d="M 206 416 C 223 413 238 410 250 407" stroke="#2a3820" stroke-width="0.6" fill="none" opacity="0.48"/>
-  </g>
-
-  <!-- 蓮藕（水下隱約可見，偏墨） -->
-  <g opacity="0.42" filter="url(#inkf)">
-    <ellipse cx="90" cy="562" rx="22" ry="12"
-      fill="#a09058" fill-opacity="0.72" transform="rotate(-10,90,562)"/>
-    <ellipse cx="128" cy="567" rx="20" ry="11"
-      fill="#a09058" fill-opacity="0.68" transform="rotate(-8,128,567)"/>
-    <ellipse cx="56" cy="569" rx="18" ry="10"
-      fill="#a09058" fill-opacity="0.62" transform="rotate(-13,56,569)"/>
-    <!-- 藕節縊縮 -->
-    <path d="M 68 560 C 70 564 68 568" stroke="#605830" stroke-width="2.2" fill="none" opacity="0.58"/>
-    <path d="M 109 563 C 111 567 109 570" stroke="#605830" stroke-width="2.0" fill="none" opacity="0.52"/>
-    <!-- 藕孔 -->
-    <circle cx="84" cy="562" r="3" fill="#503820" fill-opacity="0.42"/>
-    <circle cx="94" cy="561" r="2.4" fill="#503820" fill-opacity="0.38"/>
-    <circle cx="122" cy="566" r="2.8" fill="#503820" fill-opacity="0.40"/>
-    <circle cx="132" cy="565" r="2.2" fill="#503820" fill-opacity="0.35"/>
-    <!-- 根鬚 -->
-    <path d="M 72 573 C 71 577 70 581" stroke="#504030" stroke-width="0.8" fill="none" opacity="0.55"/>
-    <path d="M 98 573 C 97 578 98 582" stroke="#504030" stroke-width="0.8" fill="none" opacity="0.52"/>
-    <path d="M 126 574 C 125 579 126 583" stroke="#504030" stroke-width="0.8" fill="none" opacity="0.48"/>
-    <path d="M 50 575 C 48 580 49 584" stroke="#504030" stroke-width="0.7" fill="none" opacity="0.42"/>
-  </g>
-
-  <!-- ════════ 右側：荷莖、荷葉、荷花（x全部 +720） ════════ -->
-  <!-- 主莖：粗，帶節 -->
+  <!-- 右側大荷花 -->
   <g filter="url(#inkf)">
-    <path d="M 1010 580 C 1008 545 1005 510 1000 470 C 995 435 988 405 998 368"
-      stroke="#3a4830" stroke-width="3.8" fill="none" stroke-linecap="round" opacity="0.62"/>
-    <ellipse cx="1002" cy="430" rx="5" ry="3.5" fill="#3a4830" opacity="0.28" transform="rotate(-5,1002,430)"/>
-    <ellipse cx="999" cy="480" rx="4.5" ry="3" fill="#3a4830" opacity="0.22" transform="rotate(-3,999,480)"/>
+    <path d="M 1010 580 C 1008 545 1005 510 1000 470 C 995 435 988 405 998 368" stroke="#3a4830" stroke-width="3.8" fill="none" stroke-linecap="round" opacity="0.62"/>
   </g>
-  <!-- 副莖：花苞 -->
-  <path d="M 1110 580 C 1108 548 1102 518 1096 488 C 1092 465 1100 442 1108 418"
-    stroke="#3a4830" stroke-width="2.8" fill="none" stroke-linecap="round"
-    opacity="0.48" filter="url(#inkf)"/>
-  <!-- 荷葉莖（相對左側） -->
-  <path d="M 885 580 C 888 555 895 525 906 492"
-    stroke="#3a4830" stroke-width="2.2" fill="none" stroke-linecap="round"
-    opacity="0.38" filter="url(#inkf)"/>
-  <!-- 遠景小莖 -->
-  <path d="M 1160 580 C 1163 558 1168 530 1172 505"
-    stroke="#3a4830" stroke-width="1.6" fill="none" stroke-linecap="round"
-    opacity="0.28" filter="url(#inkf)"/>
+  <path d="M 1110 580 C 1108 548 1102 518 1096 488 C 1092 465 1100 442 1108 418" stroke="#3a4830" stroke-width="2.8" fill="none" stroke-linecap="round" opacity="0.48" filter="url(#inkf)"/>
 
-  <!-- 大荷葉（右） -->
-  <ellipse cx="1105" cy="475" rx="118" ry="92"
-    fill="url(#gl1)" transform="rotate(-16,1105,475)"
-    filter="url(#wash)" opacity="0.75"/>
+  <!-- 右大荷葉 -->
+  <ellipse cx="1105" cy="475" rx="118" ry="92" fill="url(#gl1)" transform="rotate(-16,1105,475)" filter="url(#wash)" opacity="0.75"/>
   <g filter="url(#inkf2)" opacity="0.78">
-    <path d="M 1105 388 C 1103 420 1101 455 1105 475 C 1109 500 1106 530 1102 550"
-      stroke="#2a3820" stroke-width="1.3" fill="none"/>
+    <path d="M 1105 388 C 1103 420 1101 455 1105 475" stroke="#2a3820" stroke-width="1.3" fill="none"/>
     <path d="M 1105 420 C 1075 428 1048 432 1025 438" stroke="#2a3820" stroke-width="0.9" fill="none" opacity="0.65"/>
     <path d="M 1105 420 C 1135 424 1162 422 1185 415" stroke="#2a3820" stroke-width="0.9" fill="none" opacity="0.65"/>
     <path d="M 1105 450 C 1065 452 1032 462 1005 472" stroke="#2a3820" stroke-width="0.8" fill="none" opacity="0.55"/>
     <path d="M 1105 450 C 1145 448 1178 452 1200 458" stroke="#2a3820" stroke-width="0.8" fill="none" opacity="0.55"/>
-    <path d="M 1105 475 C 1075 480 1045 485 1020 488" stroke="#2a3820" stroke-width="0.7" fill="none" opacity="0.42"/>
-    <path d="M 1105 475 C 1138 472 1170 468 1196 462" stroke="#2a3820" stroke-width="0.7" fill="none" opacity="0.42"/>
-    <path d="M 1005 458 C 1018 445 1030 455" stroke="#2a3820" stroke-width="1.0" fill="none" opacity="0.50"/>
   </g>
 
-  <!-- 小荷葉（右，轉折） -->
-  <ellipse cx="898" cy="480" rx="86" ry="68"
-    fill="url(#gl2)" transform="rotate(14,898,480)"
-    filter="url(#wash)" opacity="0.60"/>
-  <g filter="url(#inkf2)" opacity="0.60">
-    <path d="M 898 416 C 896 448 898 465 898 480"
-      stroke="#2a3820" stroke-width="1.0" fill="none"/>
-    <path d="M 898 450 C 870 452 845 458 828 462" stroke="#2a3820" stroke-width="0.7" fill="none" opacity="0.55"/>
-    <path d="M 898 450 C 920 445 945 440 968 438" stroke="#2a3820" stroke-width="0.7" fill="none" opacity="0.55"/>
-  </g>
-
-  <!-- 右側大荷葉的莖 -->
-  <path d="M 1150 580 C 1149 555 1149 512 1150 472"
-    stroke="#3a4830" stroke-width="2.4" fill="none" stroke-linecap="round"
-    opacity="0.40" filter="url(#inkf)"/>
-  <path d="M 1230 580 C 1229 560 1228 536 1228 514"
-    stroke="#3a4830" stroke-width="1.8" fill="none" stroke-linecap="round"
-    opacity="0.30" filter="url(#inkf)"/>
-
-  <!-- 右側大荷葉（荷花右邊，補充右側空白） -->
-  <ellipse cx="1150" cy="472" rx="128" ry="96"
-    fill="url(#gl1)" transform="rotate(-12,1150,472)"
-    filter="url(#wash)" opacity="0.72"/>
-  <g filter="url(#inkf2)" opacity="0.72">
-    <path d="M 1150 376 C 1148 410 1148 444 1150 472 C 1152 498 1149 526 1146 546"
-      stroke="#2a3820" stroke-width="1.2" fill="none"/>
-    <path d="M 1150 410 C 1178 406 1205 400 1228 392" stroke="#2a3820" stroke-width="0.9" fill="none" opacity="0.65"/>
-    <path d="M 1150 410 C 1120 414 1092 420 1070 428" stroke="#2a3820" stroke-width="0.9" fill="none" opacity="0.60"/>
-    <path d="M 1150 440 C 1184 436 1215 438 1240 444" stroke="#2a3820" stroke-width="0.8" fill="none" opacity="0.55"/>
-    <path d="M 1150 440 C 1116 442 1084 450 1060 458" stroke="#2a3820" stroke-width="0.8" fill="none" opacity="0.55"/>
-    <path d="M 1150 470 C 1188 466 1220 460 1245 454" stroke="#2a3820" stroke-width="0.7" fill="none" opacity="0.42"/>
-    <!-- 葉緣捲邊 -->
-    <path d="M 1235 436 C 1244 424 1254 432" stroke="#2a3820" stroke-width="1.0" fill="none" opacity="0.48"/>
-  </g>
-  <!-- 右側遠景小荷葉 -->
-  <ellipse cx="1228" cy="514" rx="68" ry="50"
-    fill="url(#gl2)" transform="rotate(-5,1228,514)"
-    filter="url(#wash)" opacity="0.40"/>
-  <g filter="url(#inkf2)" opacity="0.40">
-    <path d="M 1228 464 C 1227 484 1227 498 1228 514"
-      stroke="#2a3820" stroke-width="0.9" fill="none"/>
-    <path d="M 1228 488 C 1254 484 1276 478 1294 472" stroke="#2a3820" stroke-width="0.6" fill="none" opacity="0.55"/>
-    <path d="M 1228 488 C 1204 492 1182 498 1165 502" stroke="#2a3820" stroke-width="0.6" fill="none" opacity="0.55"/>
-  </g>
-
-  <!-- 盛開荷花（大開，x=998） -->
-  <ellipse cx="998" cy="340" rx="88" ry="78"
-    fill="#c0909a" fill-opacity="0.12" filter="url(#wash)"/>
+  <!-- 盛開荷花 -->
+  <ellipse cx="998" cy="340" rx="88" ry="78" fill="#c0909a" fill-opacity="0.12" filter="url(#wash)"/>
   <g filter="url(#inkf2)">
-    <path d="M 998 375 C 955 360 928 328 932 295 C 936 268 960 250 980 248 C 988 262 992 290 998 310 C 1004 290 1008 262 1016 248 C 1036 250 1060 268 1064 295 C 1068 328 1041 360 998 375 Z"
-      fill="url(#gp1)" opacity="0.55"/>
-    <path d="M 998 372 C 962 350 935 320 935 288 C 935 262 960 242 980 240 C 988 256 993 284 998 308 C 1003 284 1008 256 1016 240 C 1036 242 1061 262 1061 288 C 1061 320 1034 350 998 372 Z"
-      fill="url(#gp1)" transform="rotate(-38,998,372)" opacity="0.62"/>
-    <path d="M 998 372 C 962 350 935 320 935 288 C 935 262 960 242 980 240 C 988 256 993 284 998 308 C 1003 284 1008 256 1016 240 C 1036 242 1061 262 1061 288 C 1061 320 1034 350 998 372 Z"
-      fill="url(#gp1)" transform="rotate(38,998,372)" opacity="0.62"/>
-    <path d="M 998 372 C 962 350 935 320 935 288 C 935 262 960 242 980 240 C 988 256 993 284 998 308 C 1003 284 1008 256 1016 240 C 1036 242 1061 262 1061 288 C 1061 320 1034 350 998 372 Z"
-      fill="url(#gp1)" transform="rotate(-76,998,368)" opacity="0.48"/>
-    <path d="M 998 372 C 962 350 935 320 935 288 C 935 262 960 242 980 240 C 988 256 993 284 998 308 C 1003 284 1008 256 1016 240 C 1036 242 1061 262 1061 288 C 1061 320 1034 350 998 372 Z"
-      fill="url(#gp1)" transform="rotate(76,998,368)" opacity="0.48"/>
-    <path d="M 998 372 C 962 350 935 320 935 288 C 935 262 960 242 980 240 C 988 256 993 284 998 308 C 1003 284 1008 256 1016 240 C 1036 242 1061 262 1061 288 C 1061 320 1034 350 998 372 Z"
-      fill="url(#gp1)" transform="rotate(180,998,306)" opacity="0.40"/>
-    <!-- 中層 -->
-    <path d="M 998 368 C 972 352 952 325 954 298 C 956 274 976 256 992 252 C 996 266 998 292 998 310 C 998 292 1000 266 1004 252 C 1020 256 1040 274 1042 298 C 1044 325 1024 352 998 368 Z"
-      fill="url(#gp2)" transform="rotate(-18,998,366)" opacity="0.88"/>
-    <path d="M 998 368 C 972 352 952 325 954 298 C 956 274 976 256 992 252 C 996 266 998 292 998 310 C 998 292 1000 266 1004 252 C 1020 256 1040 274 1042 298 C 1044 325 1024 352 998 368 Z"
-      fill="url(#gp2)" transform="rotate(18,998,366)" opacity="0.88"/>
-    <!-- 最內層 -->
-    <path d="M 998 362 C 978 348 964 325 968 302 C 972 280 988 266 998 264 C 1008 266 1024 280 1028 302 C 1032 325 1018 348 998 362 Z"
-      fill="#f0e5e8" fill-opacity="0.92"/>
-    <path d="M 998 362 C 978 348 964 325 968 302 C 972 280 988 266 998 264 C 1008 266 1024 280 1028 302 C 1032 325 1018 348 998 362 Z"
-      fill="none" stroke="#9a7080" stroke-width="0.7" opacity="0.25"/>
-    <!-- 花蕊 -->
+    <path d="M 998 375 C 955 360 928 328 932 295 C 936 268 960 250 980 248 C 988 262 992 290 998 310 C 1004 290 1008 262 1016 248 C 1036 250 1060 268 1064 295 C 1068 328 1041 360 998 375 Z" fill="url(#gp1)" opacity="0.55"/>
+    <path d="M 998 372 C 962 350 935 320 935 288 C 935 262 960 242 980 240 C 988 256 993 284 998 308 C 1003 284 1008 256 1016 240 C 1036 242 1061 262 1061 288 C 1061 320 1034 350 998 372 Z" fill="url(#gp1)" transform="rotate(-38,998,372)" opacity="0.62"/>
+    <path d="M 998 372 C 962 350 935 320 935 288 C 935 262 960 242 980 240 C 988 256 993 284 998 308 C 1003 284 1008 256 1016 240 C 1036 242 1061 262 1061 288 C 1061 320 1034 350 998 372 Z" fill="url(#gp1)" transform="rotate(38,998,372)" opacity="0.62"/>
+    <path d="M 998 368 C 972 352 952 325 954 298 C 956 274 976 256 992 252 C 996 266 998 292 998 310 C 998 292 1000 266 1004 252 C 1020 256 1040 274 1042 298 C 1044 325 1024 352 998 368 Z" fill="url(#gp2)" transform="rotate(-18,998,366)" opacity="0.88"/>
+    <path d="M 998 368 C 972 352 952 325 954 298 C 956 274 976 256 992 252 C 996 266 998 292 998 310 C 998 292 1000 266 1004 252 C 1020 256 1040 274 1042 298 C 1044 325 1024 352 998 368 Z" fill="url(#gp2)" transform="rotate(18,998,366)" opacity="0.88"/>
+    <path d="M 998 362 C 978 348 964 325 968 302 C 972 280 988 266 998 264 C 1008 266 1024 280 1028 302 C 1032 325 1018 348 998 362 Z" fill="#f0e5e8" fill-opacity="0.92"/>
     <circle cx="998" cy="352" r="13" fill="#c8a030" fill-opacity="0.50"/>
     <circle cx="998" cy="352" r="9"  fill="#b89028" fill-opacity="0.60"/>
     <circle cx="998" cy="352" r="5"  fill="#d0b848" fill-opacity="0.72"/>
     <circle cx="998" cy="352" r="2.5" fill="#e0c860" fill-opacity="0.80"/>
-    <circle cx="992" cy="345" r="1.2" fill="#c8a030" fill-opacity="0.55"/>
-    <circle cx="1004" cy="345" r="1.2" fill="#c8a030" fill-opacity="0.55"/>
-    <circle cx="998" cy="342" r="1.2" fill="#c8a030" fill-opacity="0.55"/>
-    <circle cx="988" cy="350" r="1.0" fill="#c8a030" fill-opacity="0.45"/>
-    <circle cx="1008" cy="350" r="1.0" fill="#c8a030" fill-opacity="0.45"/>
   </g>
 
-  <!-- 花苞（x+720） -->
+  <!-- 花苞 -->
   <g filter="url(#inkf2)" opacity="0.88">
-    <path d="M 1102 430 C 1096 420 1099 408 1108 403 C 1112 415 1110 425 1108 432 Z"
-      fill="#3a5030" fill-opacity="0.62"/>
-    <path d="M 1114 430 C 1120 420 1117 408 1108 403 C 1104 415 1106 425 1108 432 Z"
-      fill="#3a5030" fill-opacity="0.52"/>
-    <path d="M 1105 434 C 1103 428 1108 420 1111 425 C 1112 428 1110 432 1108 435 Z"
-      fill="#2a3c20" fill-opacity="0.45"/>
-    <path d="M 1108 432 C 1096 418 1094 395 1100 378 C 1104 365 1108 358 1108 358 C 1108 358 1112 365 1116 378 C 1122 395 1120 418 1108 432 Z"
-      fill="url(#gb1)"/>
-    <path d="M 1108 432 C 1102 415 1101 392 1105 372"
-      stroke="#8a6070" stroke-width="0.7" fill="none" opacity="0.35"/>
-    <path d="M 1108 432 C 1114 415 1115 392 1111 372"
-      stroke="#8a6070" stroke-width="0.7" fill="none" opacity="0.35"/>
-    <path d="M 1104 370 C 1106 360 1108 352 1108 352 C 1108 352 1110 360 1112 370 C 1110 368 1106 368 1104 370 Z"
-      fill="#c8a0a8" fill-opacity="0.78"/>
+    <path d="M 1108 432 C 1096 418 1094 395 1100 378 C 1104 365 1108 358 1108 358 C 1108 358 1112 365 1116 378 C 1122 395 1120 418 1108 432 Z" fill="url(#gb1)"/>
+    <path d="M 1104 370 C 1106 360 1108 352 1108 352 C 1108 352 1110 360 1112 370 C 1110 368 1106 368 1104 370 Z" fill="#c8a0a8" fill-opacity="0.78"/>
   </g>
 
-  <!-- 飄落花瓣（右側水面） -->
-  <g opacity="0.38" filter="url(#inkf)">
-    <path d="M 948 532 C 942 526 945 520 952 522 C 956 524 956 530 948 532 Z"
-      fill="#c0909a" transform="rotate(-22,948,528)"/>
-    <path d="M 1055 555 C 1049 550 1052 544 1058 546 C 1062 548 1061 554 1055 555 Z"
-      fill="#c0909a" transform="rotate(18,1055,551)"/>
-    <path d="M 1155 542 C 1150 537 1153 532 1159 534 C 1162 536 1161 542 1155 542 Z"
-      fill="#c0909a" transform="rotate(-8,1155,539)"/>
-  </g>
-
-  <!-- 右側蓮藕（水下，與右荷葉對應） -->
-  <g opacity="0.44" filter="url(#inkf)">
-    <ellipse cx="1128" cy="562" rx="22" ry="12"
-      fill="#a09058" fill-opacity="0.72" transform="rotate(-10,1128,562)"/>
-    <ellipse cx="1164" cy="567" rx="20" ry="11"
-      fill="#a09058" fill-opacity="0.68" transform="rotate(-8,1164,567)"/>
-    <ellipse cx="1096" cy="569" rx="18" ry="10"
-      fill="#a09058" fill-opacity="0.62" transform="rotate(-13,1096,569)"/>
-    <ellipse cx="1198" cy="565" rx="16" ry="9"
-      fill="#a09058" fill-opacity="0.55" transform="rotate(-6,1198,565)"/>
-    <!-- 藕節縊縮 -->
-    <path d="M 1107 561 C 1109 565 1107 569" stroke="#605830" stroke-width="2.2" fill="none" opacity="0.55"/>
-    <path d="M 1145 563 C 1147 567 1145 571" stroke="#605830" stroke-width="2.0" fill="none" opacity="0.52"/>
-    <path d="M 1182 562 C 1184 566 1182 570" stroke="#605830" stroke-width="1.8" fill="none" opacity="0.45"/>
-    <!-- 藕孔 -->
-    <circle cx="1121" cy="562" r="3"   fill="#503820" fill-opacity="0.42"/>
-    <circle cx="1131" cy="561" r="2.4" fill="#503820" fill-opacity="0.38"/>
-    <circle cx="1158" cy="566" r="2.8" fill="#503820" fill-opacity="0.40"/>
-    <circle cx="1168" cy="565" r="2.2" fill="#503820" fill-opacity="0.35"/>
-    <circle cx="1193" cy="564" r="2.4" fill="#503820" fill-opacity="0.38"/>
-    <!-- 根鬚 -->
-    <path d="M 1110 573 C 1109 578 1110 582" stroke="#504030" stroke-width="0.8" fill="none" opacity="0.52"/>
-    <path d="M 1134 573 C 1133 578 1134 582" stroke="#504030" stroke-width="0.8" fill="none" opacity="0.50"/>
-    <path d="M 1162 574 C 1161 579 1162 583" stroke="#504030" stroke-width="0.8" fill="none" opacity="0.48"/>
-    <path d="M 1192 573 C 1191 578 1192 582" stroke="#504030" stroke-width="0.7" fill="none" opacity="0.42"/>
-  </g>
-
-  <!-- 落款（右下） -->
+  <!-- 落款 -->
   <g opacity="0.30">
-    <rect x="1148" y="548" width="38" height="20" rx="2"
-      fill="none" stroke="#9a3a3a" stroke-width="1.1"/>
-    <text x="1167" y="562" text-anchor="middle"
-      font-family="serif" font-size="8.5" fill="#9a3a3a" letter-spacing="2.5">善緣</text>
+    <rect x="1148" y="548" width="54" height="20" rx="2" fill="none" stroke="#9a3a3a" stroke-width="1.1"/>
+    <text x="1175" y="562" text-anchor="middle" font-family="serif" font-size="8" fill="#9a3a3a" letter-spacing="1.5">人間善緣</text>
   </g>
 </svg>
+
+<!-- 首次歡迎彈窗 -->
+<div id="welcome-overlay" onclick="closeWelcome()">
+  <div class="welcome-card" onclick="event.stopPropagation()">
+    <span class="welcome-lotus">🌸</span>
+    <div class="welcome-title">歡迎來到人間善緣</div>
+    <div class="welcome-body">
+      善緣在這裡陪你說說話。<br><br>
+      你可以直接在下方輸入文字，或點 🎙️ 用語音說話（請在瀏覽器允許麥克風）。<br><br>
+      不需要說得很完整，也不需要有問題才來——只要你想說，善緣就在。<br><br>
+      每次道別時，善緣會送你一句大師的話，帶著走。
+    </div>
+    <button class="welcome-btn" onclick="closeWelcome()">開始說話</button>
+  </div>
+</div>
 
 <!-- 頂部標題 -->
 <header>
   <div class="header-main">
     <div class="header-deco-line"></div>
-    <div class="header-title"><span class="header-lotus">🪷</span> 善 緣</div>
+    <div class="header-title"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1fab7.svg" alt="🪷" style="width:22px;height:22px;vertical-align:middle;margin-right:4px;"> 人間善緣</div>
     <div class="header-deco-line"></div>
     <button class="btn-info" onclick="toggleInfo()" id="btn-info-toggle">關於善緣</button>
   </div>
   <div class="header-sub">在這裡陪你走一段路</div>
+  <!-- 手機版「關於善緣」按鈕（桌機版在 header-main 裡用 absolute） -->
+  <div class="header-info-btn-mobile">
+    <button class="btn-info btn-info-mobile" onclick="toggleInfo()" id="btn-info-toggle-mobile">關於善緣 ▾</button>
+  </div>
+
+  <!-- 手機版蓮花裝飾（桌機隱藏）-->
+  <div class="header-mobile-deco"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1fab7.svg" alt="🪷" style="width:32px;height:32px;"></div>
 
   <div class="info-bar" id="info-bar">
     <div class="info-bar-inner">
       <div class="info-section">
-        <strong>🪷 善緣是誰</strong>
+        <strong>🪷 人間善緣是誰</strong>
         深受人間佛教薰陶的在家陪伴者，在星雲大師智慧啟發下，用真誠、不評判的心陪伴每一個人。
       </div>
       <div class="info-section">
@@ -853,7 +666,7 @@ textarea#text-input::placeholder { color: #b0a088; }
       </div>
       <div class="info-section">
         <strong>🙏 特別感謝</strong>
-        感謝<strong>佛光山人間佛教研究院</strong>開放大師全集，支持「善緣」的誕生。🪷<br>
+        感謝<strong>佛光山人間佛教研究院</strong>開放大師全集，支持「人間善緣」的誕生。🪷<br>
         感謝<strong>佛光大學特色研究專案</strong>支持本項目開發。
       </div>
     </div>
@@ -862,6 +675,49 @@ textarea#text-input::placeholder { color: #b0a088; }
 
 <!-- 對話區 -->
 <div id="chat">
+  <!-- 聊天區蓮花襯底 -->
+  <svg id="chat-lotus-bg" aria-hidden="true" viewBox="0 0 400 400"
+    xmlns="http://www.w3.org/2000/svg"
+    style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(85vw,420px);height:min(85vw,420px);pointer-events:none;opacity:0.32;z-index:0;">
+    <defs>
+      <radialGradient id="cgl1" cx="38%" cy="32%" r="68%">
+        <stop offset="0%"   stop-color="#5a6b4a" stop-opacity="0.7"/>
+        <stop offset="100%" stop-color="#243020" stop-opacity="0.1"/>
+      </radialGradient>
+      <radialGradient id="cgp1" cx="50%" cy="65%" r="58%">
+        <stop offset="0%"   stop-color="#c8a8b2" stop-opacity="0.9"/>
+        <stop offset="100%" stop-color="#a07880" stop-opacity="0.1"/>
+      </radialGradient>
+      <radialGradient id="cgp2" cx="50%" cy="30%" r="60%">
+        <stop offset="0%"   stop-color="#d8b8c0" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#b08890" stop-opacity="0.1"/>
+      </radialGradient>
+      <filter id="cinkf"><feGaussianBlur stdDeviation="1.5"/></filter>
+      <filter id="cwash"><feGaussianBlur stdDeviation="3"/></filter>
+    </defs>
+    <!-- 莖 -->
+    <path d="M 200 400 C 200 360 200 310 200 265" stroke="#3a4830" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.7" filter="url(#cinkf)"/>
+    <!-- 荷葉 -->
+    <ellipse cx="200" cy="330" rx="110" ry="82" fill="url(#cgl1)" transform="rotate(-8,200,330)" filter="url(#cwash)" opacity="0.9"/>
+    <path d="M 200 250 C 198 280 196 310 200 330" stroke="#2a3820" stroke-width="1.5" fill="none"/>
+    <path d="M 200 285 C 160 292 125 300 95 310" stroke="#2a3820" stroke-width="1" fill="none" opacity="0.7"/>
+    <path d="M 200 285 C 240 288 275 290 305 295" stroke="#2a3820" stroke-width="1" fill="none" opacity="0.7"/>
+    <path d="M 200 310 C 155 315 115 325 85 335" stroke="#2a3820" stroke-width="0.8" fill="none" opacity="0.6"/>
+    <path d="M 200 310 C 245 312 282 318 312 328" stroke="#2a3820" stroke-width="0.8" fill="none" opacity="0.6"/>
+    <!-- 花瓣外層 -->
+    <path d="M 200 240 C 155 225 128 193 132 160 C 136 133 160 115 180 113 C 188 127 192 155 200 175 C 208 155 212 127 220 113 C 240 115 264 133 268 160 C 272 193 245 225 200 240 Z" fill="url(#cgp1)" opacity="0.7" filter="url(#cinkf)"/>
+    <path d="M 200 240 C 155 225 128 193 132 160 C 136 133 160 115 180 113 C 188 127 192 155 200 175 C 208 155 212 127 220 113 C 240 115 264 133 268 160 C 272 193 245 225 200 240 Z" fill="url(#cgp1)" transform="rotate(-38,200,238)" opacity="0.7" filter="url(#cinkf)"/>
+    <path d="M 200 240 C 155 225 128 193 132 160 C 136 133 160 115 180 113 C 188 127 192 155 200 175 C 208 155 212 127 220 113 C 240 115 264 133 268 160 C 272 193 245 225 200 240 Z" fill="url(#cgp1)" transform="rotate(38,200,238)" opacity="0.7" filter="url(#cinkf)"/>
+    <!-- 花瓣內層 -->
+    <path d="M 200 235 C 174 219 154 192 156 165 C 158 141 178 123 194 119 C 198 133 200 158 200 175 C 200 158 202 133 206 119 C 222 123 242 141 244 165 C 246 192 226 219 200 235 Z" fill="url(#cgp2)" transform="rotate(-18,200,233)" opacity="0.95"/>
+    <path d="M 200 235 C 174 219 154 192 156 165 C 158 141 178 123 194 119 C 198 133 200 158 200 175 C 200 158 202 133 206 119 C 222 123 242 141 244 165 C 246 192 226 219 200 235 Z" fill="url(#cgp2)" transform="rotate(18,200,233)" opacity="0.95"/>
+    <!-- 花心 -->
+    <path d="M 200 228 C 180 214 166 192 170 169 C 174 147 190 133 200 131 C 210 133 226 147 230 169 C 234 192 220 214 200 228 Z" fill="#f0e5e8" fill-opacity="0.95"/>
+    <circle cx="200" cy="218" r="16" fill="#c8a030" fill-opacity="0.55"/>
+    <circle cx="200" cy="218" r="11" fill="#b89028" fill-opacity="0.65"/>
+    <circle cx="200" cy="218" r="6"  fill="#d0b848" fill-opacity="0.75"/>
+    <circle cx="200" cy="218" r="3"  fill="#e0c860" fill-opacity="0.85"/>
+  </svg>
   <div class="chat-inner" id="chat-inner"></div>
 </div>
 
@@ -878,248 +734,4 @@ textarea#text-input::placeholder { color: #b0a088; }
     <textarea id="text-input" placeholder="想說什麼？" rows="1"
       onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
     <button class="icon-btn btn-send" id="btn-send" onclick="sendText()" title="送出">↑</button>
-  </div>
-  <div class="hint" id="hint-text"></div>
-</footer>
-
-<div class="toast" id="toast"></div>
-
-<script>
-let messages = [];
-let isStreaming = false;
-let blessingGiven = false;  // 同一次對話只送一次，重整=新對話可再送
-
-window.addEventListener('DOMContentLoaded', () => {
-  addMessage('assistant', '嗨，我是善緣。你今天過得怎麼樣？');
-});
-
-function toggleInfo() {
-  const bar = document.getElementById('info-bar');
-  const btn = document.getElementById('btn-info-toggle');
-  const open = bar.classList.toggle('open');
-  btn.textContent = open ? '收起' : '關於善緣';
-}
-
-function getChatInner() { return document.getElementById('chat-inner'); }
-
-function addMessage(role, text) {
-  const inner = getChatInner();
-  const div = document.createElement('div');
-  div.className = `msg ${role}`;
-  if (role === 'assistant') {
-    const label = document.createElement('span');
-    label.className = 'msg-label';
-    label.textContent = '🪷 善緣';
-    div.appendChild(label);
-  }
-  const content = document.createElement('span');
-  content.className = 'msg-content';
-  content.textContent = text;
-  div.appendChild(content);
-  inner.appendChild(div);
-  scrollToBottom();
-  return div;
-}
-
-function addTyping() {
-  const inner = getChatInner();
-  const wrap = document.createElement('div');
-  wrap.className = 'typing-wrap';
-  wrap.id = 'typing-indicator';
-  wrap.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
-  inner.appendChild(wrap);
-  scrollToBottom();
-}
-
-function removeTyping() {
-  const el = document.getElementById('typing-indicator');
-  if (el) el.remove();
-}
-
-function addBlessing(quote, title, book) {
-  const inner = getChatInner();
-
-  // 先放「拆禮物」按鈕
-  const btnWrap = document.createElement('div');
-  btnWrap.className = 'blessing-btn-wrap';
-  const btn = document.createElement('button');
-  btn.className = 'btn-open-blessing';
-  btn.innerHTML = '🪷 &nbsp;準備好了嗎？點一下，收祈福禮';
-  btnWrap.appendChild(btn);
-  inner.appendChild(btnWrap);
-  scrollToBottom();
-
-  // 點下去才展開卡片
-  btn.addEventListener('click', () => {
-    btnWrap.remove();
-    const div = document.createElement('div');
-    div.className = 'blessing';
-    const source = title ? `——〈${title}〉${book ? '《' + book + '》' : ''}` : '';
-    div.innerHTML = `
-      <span class="blessing-icon">🪷</span>
-      <div class="blessing-label">✦ 善緣的祈福禮 ✦</div>
-      <div class="blessing-quote">「${quote}」</div>
-      ${source ? `<div class="blessing-source">${source}</div>` : ''}
-    `;
-    inner.appendChild(div);
-    scrollToBottom();
-  }, { once: true });
-}
-
-function scrollToBottom() {
-  const chat = document.getElementById('chat');
-  chat.scrollTop = chat.scrollHeight;
-}
-
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendText(); }
-}
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 130) + 'px';
-}
-async function sendText() {
-  if (isStreaming) return;
-  const input = document.getElementById('text-input');
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = ''; input.style.height = 'auto';
-  await sendMessage(text);
-}
-
-async function sendMessage(userText) {
-  if (isStreaming) return;
-  isStreaming = true;
-  setUIDisabled(true);
-  addMessage('user', userText);
-  messages.push({ role: 'user', content: userText });
-  addTyping();
-  try {
-    const resp = await fetch('/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages, user_text: userText }),
-    });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    removeTyping();
-    const msgDiv = addMessage('assistant', '');
-    const contentSpan = msgDiv.querySelector('.msg-content');
-    let fullText = '';
-    const reader = resp.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop();
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue;
-        try {
-          const data = JSON.parse(line.slice(6));
-          if (data.type === 'token') {
-            fullText += data.text;
-            contentSpan.textContent = fullText;
-            scrollToBottom();
-          } else if (data.type === 'blessing') {
-            if (!blessingGiven) {
-              blessingGiven = true;
-              addBlessing(data.quote, data.title, data.book);
-            }
-          } else if (data.type === 'done') {
-            messages.push({ role: 'assistant', content: data.full });
-          } else if (data.type === 'error') {
-            contentSpan.textContent = `（連線出了點狀況：${data.message}）`;
-          }
-        } catch(e) {}
-      }
-    }
-  } catch (e) {
-    removeTyping();
-    addMessage('assistant', `（連線出了點狀況：${e.message}）`);
-  }
-  isStreaming = false;
-  setUIDisabled(false);
-  document.getElementById('text-input').focus();
-}
-
-function setUIDisabled(d) {
-  document.getElementById('btn-send').disabled = d;
-  document.getElementById('btn-voice').disabled = d;
-  document.getElementById('text-input').disabled = d;
-}
-
-let mediaRecorder = null;
-let audioChunks = [];
-let recInterval = null;
-let recSeconds = 0;
-
-function toggleVoice() {
-  if (mediaRecorder && mediaRecorder.state === 'recording') stopRecording();
-  else startRecording();
-}
-
-async function startRecording() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    audioChunks = []; recSeconds = 0;
-    mediaRecorder = new MediaRecorder(stream);
-    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-    mediaRecorder.onstop = handleRecordingDone;
-    mediaRecorder.start();
-    document.getElementById('btn-voice').classList.add('recording');
-    document.getElementById('btn-voice').textContent = '⏹️';
-    document.getElementById('record-bar').classList.add('show');
-    recInterval = setInterval(() => {
-      recSeconds++;
-      const m = String(Math.floor(recSeconds / 60)).padStart(2, '0');
-      const s = String(recSeconds % 60).padStart(2, '0');
-      document.getElementById('rec-timer').textContent = `${m}:${s}`;
-      if (recSeconds >= 120) stopRecording();
-    }, 1000);
-  } catch(e) {
-    showToast('請先允許麥克風權限：點網址列🔒→權限→麥克風→允許，再重新整理');
-  }
-}
-
-function stopRecording() {
-  if (!mediaRecorder || mediaRecorder.state !== 'recording') return;
-  mediaRecorder.stop();
-  mediaRecorder.stream.getTracks().forEach(t => t.stop());
-  clearInterval(recInterval);
-  document.getElementById('btn-voice').classList.remove('recording');
-  document.getElementById('btn-voice').textContent = '🎙️';
-  document.getElementById('record-bar').classList.remove('show');
-  document.getElementById('btn-voice').disabled = true;
-}
-
-async function handleRecordingDone() {
-  const blob = new Blob(audioChunks, { type: 'audio/wav' });
-  const formData = new FormData();
-  formData.append('file', blob, 'audio.wav');
-  try {
-    const resp = await fetch('/transcribe', { method: 'POST', body: formData });
-    const data = await resp.json();
-    if (data.transcript) {
-      document.getElementById('btn-voice').disabled = false;
-      await sendMessage(data.transcript);
-    } else {
-      showToast(data.error || '辨識失敗，請再試一次');
-      document.getElementById('btn-voice').disabled = false;
-    }
-  } catch(e) {
-    showToast('辨識失敗：' + e.message);
-    document.getElementById('btn-voice').disabled = false;
-  }
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3500);
-}
-</script>
-</body>
-</html>
+  </d

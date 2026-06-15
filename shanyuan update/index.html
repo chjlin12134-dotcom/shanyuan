@@ -641,7 +641,7 @@ textarea#text-input::placeholder { color: #b0a088; }
 <header>
   <div class="header-main">
     <div class="header-deco-line"></div>
-    <div class="header-title"><span class="header-lotus">🪷</span> 人間善緣</div>
+    <div class="header-title"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1fab7.svg" alt="🪷" style="width:22px;height:22px;vertical-align:middle;margin-right:4px;"> 人間善緣</div>
     <div class="header-deco-line"></div>
     <button class="btn-info" onclick="toggleInfo()" id="btn-info-toggle">關於善緣</button>
   </div>
@@ -652,7 +652,7 @@ textarea#text-input::placeholder { color: #b0a088; }
   </div>
 
   <!-- 手機版蓮花裝飾（桌機隱藏）-->
-  <div class="header-mobile-deco">🪷</div>
+  <div class="header-mobile-deco"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1fab7.svg" alt="🪷" style="width:32px;height:32px;"></div>
 
   <div class="info-bar" id="info-bar">
     <div class="info-bar-inner">
@@ -678,7 +678,7 @@ textarea#text-input::placeholder { color: #b0a088; }
   <!-- 聊天區蓮花襯底 -->
   <svg id="chat-lotus-bg" aria-hidden="true" viewBox="0 0 400 400"
     xmlns="http://www.w3.org/2000/svg"
-    style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;height:320px;pointer-events:none;opacity:0.13;z-index:0;">
+    style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(85vw,420px);height:min(85vw,420px);pointer-events:none;opacity:0.32;z-index:0;">
     <defs>
       <radialGradient id="cgl1" cx="38%" cy="32%" r="68%">
         <stop offset="0%"   stop-color="#5a6b4a" stop-opacity="0.7"/>
@@ -734,17 +734,4 @@ textarea#text-input::placeholder { color: #b0a088; }
     <textarea id="text-input" placeholder="想說什麼？" rows="1"
       onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
     <button class="icon-btn btn-send" id="btn-send" onclick="sendText()" title="送出">↑</button>
-  </div>
-  <div class="hint" id="hint-text"></div>
-</footer>
-
-<div class="toast" id="toast"></div>
-
-<script>
-let messages = [];
-let isStreaming = false;
-let blessingGiven = false;
-
-// ── 歡迎彈窗 ──
-function closeWelcome() {
-  const overlay = document.getElement
+  </d
